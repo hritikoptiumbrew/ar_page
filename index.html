@@ -1,54 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>AR Model Placement</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.2/aframe/build/aframe-ar-nft.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
-</head>
+  <head>
+    <title>AR Placement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      AFRAME.registerComponent("ar-hit-test", {
+        init: function () {
+          const scene = this.el.sceneEl;
+          const model = document.querySelector("#model");
+          let hitTestSource = null;
+          let localReferenceSpace = null;
 
-<body style="margin: 0; overflow: hidden;">
-  <a-scene
-    webxr="optionalFeatures: hit-test;"
-    renderer="colorManagement: true;"
-    vr-mode-ui="enabled: false"
-    embedded>
-    
-    <!-- Load your GLB -->
-    <a-entity id="placed-model"
-      gltf-model="model.gltf"
-      visible="false"
-      scale="1 1 1">
-    </a-entity>
+          scene.renderer.xr.addEventListener("sessionstart", async () => {
+            const session = scene.renderer.xr.getSession();
 
-    <a-camera></a-camera>
+            const viewerSpace = await session.requestReferenceSpace("viewer");
+            hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
-  </a-scene>
+            localReferenceSpace = await session.requestReferenceSpace("local");
 
-  <script>
-    const scene = document.querySelector("a-scene");
-    const model = document.querySelector("#placed-model");
+            session.addEventListener("select", () => {
+              if (this.position) {
+                model.object3D.position.copy(this.position);
+                model.setAttribute("visible", true);
+              }
+            });
+          });
 
-    scene.addEventListener("click", (event) => {
-      const frame = scene.xrSession;
-      if (!frame) return;
+          this.el.sceneEl.addEventListener("beforexrframe", (time, frame) => {
+            if (!hitTestSource) return;
 
-      const viewerSpace = frame.viewerSpace;
-      const hitTestSource = scene.systems.webxr.hitTestSource;
+            const xrViewerPose = frame.getViewerPose(localReferenceSpace);
+            if (xrViewerPose) {
+              const hitTestResults = frame.getHitTestResults(hitTestSource);
+              if (hitTestResults.length > 0) {
+                const hit = hitTestResults[0];
+                const pose = hit.getPose(localReferenceSpace);
 
-      frame.requestAnimationFrame(() => {
-        const pose = frame.getViewerPose(scene.renderer.xr.getReferenceSpace());
-        if (!pose || !hitTestSource) return;
-
-        const hitResults = frame.getHitTestResults(hitTestSource);
-        if (hitResults.length > 0) {
-          const hitPose = hitResults[0].getPose(scene.renderer.xr.getReferenceSpace());
-          model.setAttribute("position", `${hitPose.transform.position.x} ${hitPose.transform.position.y} ${hitPose.transform.position.z}`);
-          model.setAttribute("visible", "true");
+                this.position = new THREE.Vector3(
+                  pose.transform.position.x,
+                  pose.transform.position.y,
+                  pose.transform.position.z
+                );
+              }
+            }
+          });
         }
       });
-    });
-  </script>
-</body>
+    </script>
+  </head>
+
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene
+      renderer="colorManagement: true;"
+      webxr="optionalFeatures: hit-test;"
+      vr-mode-ui="enabled: false"
+      ar-hit-test>
+
+      <!-- Your GLTF Model -->
+      <a-entity id="model"
+        gltf-model="model.gltf"
+        visible="false"
+        scale="1 1 1">
+      </a-entity>
+
+      <a-camera></a-camera>
+    </a-scene>
+  </body>
 </html>
