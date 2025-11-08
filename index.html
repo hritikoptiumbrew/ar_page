@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>AR Spaghetti Object</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      body { margin: 0; overflow: hidden; }
-      model-viewer { width: 100vw; height: 100vh; }
-      #ar-button {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 14px 22px;
-        font-size: 16px;
-        border-radius: 12px;
-        background: #111;
-        color: white;
-        border: none;
-      }
-    </style>
-  </head>
+<head>
+  <title>AR Placement Test</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body { margin: 0; }
+    model-viewer { width: 100vw; height: 100vh; }
+    #ar-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 22px;
+      font-size: 16px;
+      border-radius: 12px;
+      background: #111;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
 
-  <body>
-    <model-viewer
-      src="./source/model.glb"
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      camera-controls
-      exposure="1"
-      shadow-intensity="1"
-      xr-environment
-      ar-placement="floor">
-      
-      <button id="ar-button" slot="ar-button">Place in AR</button>
-    </model-viewer>
-  </body>
+<model-viewer
+  src="source/model.glb"
+  ios-src="source/model.usdz"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  camera-controls
+  xr-environment
+  ar-placement="floor"
+  shadow-intensity="1">
+  
+  <button id="ar-button" slot="ar-button">Place Object in AR</button>
+</model-viewer>
+
+</body>
 </html>
