@@ -81,159 +81,16 @@
 </head>
 <body>
 
-<model-viewer
-  src="source/model.glb"
-  alt="3D Model"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  ar-scale="fixed"
-  ar-delay="0"
-  auto-rotate
-  camera-controls
-  enable-pan
-  xr-environment
-  ar-placement="floor"
-  shadow-intensity="1"
-  shadow-softness="1"
-  exposure="1"
-  environment-image="neutral"
-  background-color="#ffffff"
-  loading="eager">
-  
-  <!-- Loading indicator -->
-  <div class="progress-bar" slot="progress-bar">
-    <div class="progress-bar-fill"></div>
-  </div>
-  
-  <!-- Error message -->
-  <div class="error-message" slot="ar-failure">AR is not supported on this device or browser.</div>
-  
+  <model-viewer src="0869c8ddd2bc40adbabe87203549ead5.glb" ar camera-controls poster="poster.webp" touch-action="pan-y" alt="A 3D model of an astronaut" auto-rotate>
+    <div class="progress-bar hide" slot="progress-bar">
+        <div class="update-bar"></div>
+    </div>
+     <button slot="ar-button" style="background-color: white; border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px; ">
+      👋 Activate AR
+    </button>
+    <div id="ar-prompt">
+        <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+    </div>
 </model-viewer>
-
-<!-- Standalone AR button that appears initially -->
-<button id="ar-button" style="
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 14px 22px;
-  font-size: 16px;
-  border-radius: 12px;
-  background: #111;
-  color: white;
-  border: none;
-  cursor: pointer;
-  z-index: 10000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  display: block;
-">Place Object in AR</button>
-
-  <script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-      const modelViewer = document.querySelector('model-viewer');
-      
-      if (modelViewer) {
-        // Handle model loading errors
-        modelViewer.addEventListener('error', (event) => {
-          console.error('Model loading error:', event);
-          const errorMessage = document.querySelector('.error-message');
-          if (errorMessage) {
-            errorMessage.style.display = 'block';
-            errorMessage.textContent = 'Failed to load 3D model. Please check file path and format.';
-          }
-        });
-        
-        // Handle successful model loading
-        modelViewer.addEventListener('load', () => {
-          console.log('Model loaded successfully');
-          // Hide loading indicator when model loads
-          const progressBar = document.querySelector('.progress-bar');
-          if (progressBar) {
-            progressBar.style.display = 'none';
-          }
-        });
-        
-        // Update progress bar during loading
-        modelViewer.addEventListener('progress', (event) => {
-          const progressBarFill = document.querySelector('.progress-bar-fill');
-          if (progressBarFill) {
-            progressBarFill.style.width = (event.detail.totalProgress * 100) + '%';
-          }
-        });
-        
-        // Log AR status
-        modelViewer.addEventListener('ar-status', (event) => {
-          console.log('AR Status:', event.detail.status);
-          if (event.detail.status === 'session-started') {
-            console.log('AR session started successfully!');
-            const errorMessage = document.querySelector('.error-message');
-            if (errorMessage) {
-              errorMessage.style.display = 'none';
-            }
-          }
-        });
-        
-        // Handle AR session errors
-        modelViewer.addEventListener('ar-failed', (event) => {
-          console.error('AR failed:', event);
-          const errorMessage = document.querySelector('.error-message');
-          if (errorMessage) {
-            errorMessage.style.display = 'block';
-            errorMessage.textContent = 'AR session failed to start. Check permissions and compatibility.';
-          }
-        });
-        
-        // Check supported modes
-        console.log('Supported AR modes:', navigator.xr ? 'WebXR supported' : 'WebXR not supported');
-        
-        // The model-viewer is hidden initially, only show AR button
-        console.log('Model loaded, AR button ready');
-        
-        // Initially hide the 3D model but keep the standalone button visible
-        modelViewer.style.display = 'none';
-        
-        // Handle when AR button is clicked
-        const arButton = document.getElementById('ar-button');
-        if (arButton) {
-          arButton.addEventListener('click', () => {
-            console.log('AR button clicked');
-            
-            // Attempt to enter AR mode 
-            if (modelViewer.enterAR) {
-              modelViewer.style.display = 'block'; // Show the model-viewer
-              modelViewer.enterAR({
-                // Try to ensure proper camera background
-                requiredFeatures: ['hit-test'],
-                optionalFeatures: ['dom-overlay'],
-                domOverlay: { root: document.body }
-              }).then(() => {
-                console.log('Successfully entered AR mode');
-                // Hide the standalone button when AR starts
-                arButton.style.display = 'none';
-              }).catch((error) => {
-                console.error('Failed to enter AR mode:', error);
-                // If entering AR fails, show the normal view
-                modelViewer.style.display = 'block';
-                // Keep the button visible so user can try again
-                arButton.style.display = 'block';
-              });
-            } else {
-              console.log('enterAR method not available');
-              // Inform the user that AR isn't supported
-              const errorMessage = document.querySelector('.error-message');
-              if (errorMessage) {
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'AR is not supported on this device. Showing model in normal view.';
-              }
-              // Show the model in normal view as fallback
-              modelViewer.style.display = 'block';
-              // Hide the AR button since AR isn't supported
-              arButton.style.display = 'none';
-            }
-          });
-        }
-      }
-    });
-  </script>
 </body>
 </html>
