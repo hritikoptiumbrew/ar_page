@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AR with A-Frame</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Augmented Reality with A-Frame">
+  <!-- Include A-Frame library -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <!-- Include AR.js for A-Frame -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+    
+    #start-ar-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 22px;
+      font-size: 16px;
+      border-radius: 12px;
+      background: #111;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 10000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      display: block;
+    }
+    
+    #start-ar-button:hover {
+      background: #333;
+    }
+    
+    #error-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: none;
+      z-index: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Initial button to start AR -->
+  <button id="start-ar-button">Start AR Experience</button>
+  
+  <!-- Error message placeholder -->
+  <div id="error-message">AR is not supported on this device or browser.</div>
+
+  <!-- A-Frame Scene -->
+  <a-scene 
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true;"
+    embedded
+    arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    style="display: none;">
+    
+    <!-- Marker-based AR (using a pattern marker) -->
+    <a-marker preset="hiro">
+      <a-entity 
+        position="0 0 0"
+        scale="0.1 0.1 0.1"
+        gltf-model="url(source/model.glb)"
+        animation-mixer>
+      </a-entity>
+    </a-marker>
+    
+    <!-- Camera -->
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const startButton = document.getElementById('start-ar-button');
+      const scene = document.querySelector('a-scene');
+      const errorMessage = document.getElementById('error-message');
+      
+      // Initially hide the scene
+      scene.style.display = 'none';
+      
+      startButton.addEventListener('click', function() {
+        console.log('Start AR button clicked');
+        
+        // Check if AR.js is supported
+        if (typeof ARjs !== 'undefined' && ARjs.checkCompatibility()) {
+          // Hide the start button
+          startButton.style.display = 'none';
+          
+          // Show the A-Frame scene
+          scene.style.display = 'block';
+          
+          // Try to initialize AR
+          try {
+            scene.components.arjs.initialize().then(() => {
+              console.log('AR scene initialized successfully');
+              errorMessage.style.display = 'none';
+            }).catch((error) => {
+              console.error('Failed to initialize AR:', error);
+              errorMessage.style.display = 'block';
+              errorMessage.textContent = 'Failed to start AR. Please try again.';
+              startButton.style.display = 'block';
+              scene.style.display = 'none';
+            });
+          } catch (error) {
+            console.error('Error initializing AR:', error);
+            errorMessage.style.display = 'block';
+            errorMessage.textContent = 'AR initialization error. Check browser compatibility.';
+            startButton.style.display = 'block';
+            scene.style.display = 'none';
+          }
+        } else {
+          console.log('AR not supported');
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = 'AR is not supported on this device. Showing model in normal view.';
+          
+          // Fallback: Show a normal A-Frame scene without AR
+          showFallbackScene();
+        }
+      });
+      
+      function showFallbackScene() {
+        // Create a fallback scene with the model visible
+        startButton.style.display = 'none';
+        
+        // Create a new scene element for the fallback
+        const fallbackScene = document.createElement('a-scene');
+        fallbackScene.innerHTML = `
+          <a-entity position="0 1.8 4" rotation="0 180 0" gltf-model="url(source/model.glb)" animation-mixer scale="0.5 0.5 0.5"></a-entity>
+          <a-sky color="#ECECEC"></a-sky>
+          <a-entity camera look-controls="enabled: true" position="0 1.6 0"></a-entity>
+        `;
+        
+        // Replace the AR scene with the fallback scene
+        scene.parentNode.replaceChild(fallbackScene, scene);
+      }
+    });
+  </script>
+</body>
+</html>
