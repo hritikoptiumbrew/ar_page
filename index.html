@@ -8,115 +8,93 @@
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
-  body{
+  body {
     margin:0;
     background:#fff;
     overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+  }
+
+  /* Model Takes ~70% of Screen */
+  #viewer-box {
+    flex: 0 0 70%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
   }
 
   model-viewer {
-    width:100vw;
-    height:100vh;
-    position: relative;
-    --progress-bar-color:#ff6400;
+    width:100%;
+    height:100%;
+    background:#fff;
   }
 
-  /* Progress Bar */
-  .progress-bar {
-    position:absolute;
-    left:50%;
-    bottom:12%;
-    width:60%;
-    max-width:300px;
-    height:6px;
-    background:rgba(0,0,0,0.12);
-    transform:translateX(-50%);
-    border-radius:4px;
-    overflow:hidden;
+  /* AR Button Area (~20% of screen) */
+  #button-area {
+    flex: 0 0 20%;
     display:flex;
+    justify-content:center;
+    align-items:center;
   }
-  .update-bar {
-    background:var(--progress-bar-color);
-    width:0%;
-    transition:width 0.2s;
-  }
-  .hide { display:none; }
 
-  /* AR Button */
   #ar-button {
     background:black;
     color:white;
-    border-radius:8px;
     border:none;
-    position:absolute;
-    bottom:4%;
-    left:50%;
-    transform:translateX(-50%);
-    padding:12px 18px;
-    font-size:16px;
+    padding:14px 22px;
+    font-size:18px;
+    border-radius:8px;
     cursor:pointer;
-    width:70%;
+    width: 70%;
     max-width:260px;
+    text-align:center;
   }
 
-  /* AR Prompt */
-  #ar-prompt {
-    position:absolute;
-    bottom:20%;
-    left:50%;
-    transform:translateX(-50%);
-    display:none;
-    animation:fadein 1.5s infinite alternate;
+  /* Bottom Spacing (~10%) */
+  #bottom-space {
+    flex: 0 0 10%;
   }
-  @keyframes fadein { from {opacity:0.2;} to {opacity:1;} }
 </style>
 </head>
 
 <body>
 
-<model-viewer id="viewer"
-  src="0869c8ddd2bc40adbabe87203549ead5.glb"
-  ios-src="0869c8ddd2bc40adbabe87203549ead5.usdz"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  camera-controls
-  shadow-intensity="1"
-  exposure="1.2">
+<div id="viewer-box">
+  <model-viewer id="viewer"
+    src="0869c8ddd2bc40adbabe87203549ead5.glb"
+    ios-src="0869c8ddd2bc40adbabe87203549ead5.usdz"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    shadow-intensity="1"
+    exposure="1.2">
+  </model-viewer>
+</div>
 
-  <!-- Progress -->
-  <div class="progress-bar" slot="progress-bar">
-    <div class="update-bar"></div>
-  </div>
+<div id="button-area">
+  <button id="ar-button">View in your space</button>
+</div>
 
-  <!-- AR Button -->
-  <button slot="ar-button" id="ar-button">View in your space</button>
-
-  <!-- AR Prompt -->
-  <div id="ar-prompt">
-    <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
-  </div>
-
-</model-viewer>
+<div id="bottom-space"></div>
 
 <script>
-const mv = document.querySelector('#viewer');
-const progress = mv.querySelector('.progress-bar');
-const bar = mv.querySelector('.update-bar');
-const arPrompt = document.querySelector('#ar-prompt');
+  const viewer = document.querySelector("#viewer");
+  const btn = document.querySelector("#ar-button");
 
-mv.addEventListener('progress', (e)=>{
-  const p = e.detail.totalProgress * 100;
-  bar.style.width = `${p}%`;
-  if(p === 100){ progress.classList.add('hide'); }
-});
+  btn.addEventListener("click", () => {
+    if (viewer.canActivateAR) viewer.activateAR();
+    else viewer.dispatchEvent(new CustomEvent('ar-trigger'));
+  });
 
-mv.addEventListener('ar-status', (e)=>{
-  if(e.detail.status === 'session-started'){
-    arPrompt.style.display = 'block';
-  } else {
-    arPrompt.style.display = 'none';
-  }
-});
+  // When AR closes → show button again automatically
+  viewer.addEventListener('ar-status', (event) => {
+    if (event.detail.status === 'not-presenting') {
+      btn.style.display = "flex";
+    }
+  });
 </script>
 
 </body>
