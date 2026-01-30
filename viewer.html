@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Dynamic AR Model Viewer</title>
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #fff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Model Takes ~70% of Screen */
+    #viewer-box {
+      flex: 0 0 70%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+
+    #viewer-box {
+      display: block;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 90vh;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+    }
+
+    /* AR Button Area (~20% of screen) */
+    #button-area {
+      flex: 0 0 20%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #ar-button {
+      background: black;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 70%;
+      max-width: 260px;
+      text-align: center;
+    }
+
+    /* Bottom Spacing (~10%) */
+    #bottom-space {
+      flex: 0 0 10%;
+    }
+
+    #error-message {
+      color: red;
+      text-align: center;
+      padding: 10px;
+      display: none;
+    }
+
+    #warning-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #ffcc00;
+      color: #333;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      z-index: 1000;
+      display: none;
+      font-family: sans-serif;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="warning-banner"></div>
+
+  <div id="viewer-box">
+    <model-viewer id="viewer" ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1"
+      exposure="1.2">
+    </model-viewer>
+  </div>
+
+  <div id="error-message"></div>
+
+  <!-- <div id="button-area">
+  <button id="ar-button">View in your space</button>
+</div>
+
+<div id="bottom-space"></div> -->
+
+  <script>
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Function to validate the model URL
+    function validateModelUrl(url) {
+      // Check if the URL has a valid 3D model extension
+      const validExtensions = ['.glb', '.gltf', '.usdz', '.fbx', '.obj'];
+      const lowerUrl = url.toLowerCase();
+      return validExtensions.some(ext => lowerUrl.includes(ext));
+    }
+
+    // Function to generate file paths from model name
+    function generateModelPaths(modelName) {
+      // If modelName includes a file extension, treat it as a path/URL
+      if (modelName && modelName.includes('.')) {
+        return { src: modelName, iosSrc: modelName };
+      }
+
+      // Otherwise, treat as model name and generate relative paths in the project
+      return {
+        src: `models/${modelName}.glb`,
+        iosSrc: `models/${modelName}.usdz`
+      };
+    }
+
+    // Get the model name from the 'model' parameter
+    const modelName = getUrlParameter('model');
+    const iosModelName = getUrlParameter('ios-model'); // Allow override via ios-model param
+
+    // Validate and set the model source
+    if (modelName) {
+      const viewer = document.querySelector("#viewer");
+
+      // Generate paths for the model
+      const modelPaths = generateModelPaths(modelName);
+      viewer.setAttribute('src', modelPaths.src);
+
+      // Function to check if a file exists
+      async function checkFileExists(url) {
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+          return response.ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // Perform validation checks
+      async function validateFiles() {
+        const warningBanner = document.getElementById('warning-banner');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        const glbExists = await checkFileExists(modelPaths.src);
+
+        // Determine USDZ path to check
+        let usdzPath = modelPaths.iosSrc;
+        if (iosModelName) {
+          usdzPath = iosModelName.includes('.') ? iosModelName : `models/${iosModelName}.usdz`;
+        }
+        const usdzExists = await checkFileExists(usdzPath);
+
+        if (!glbExists) {
+          warningBanner.textContent = `Warning: Main model file (.glb) not found at ${modelPaths.src}`;
+          warningBanner.style.background = "#ff4444";
+          warningBanner.style.color = "white";
+          warningBanner.style.display = 'block';
+        } else if (isIOS && !usdzExists) {
+          warningBanner.textContent = `Missing AR file (.usdz) for iOS. AR will not work on this device.`;
+          warningBanner.style.display = 'block';
+        } else if (!usdzExists) {
+          console.warn(`Note: .usdz file not found at ${usdzPath}. AR will not work on iOS devices.`);
+        }
+      }
+
+      validateFiles();
+
+      // Set iOS source - if specific iOS model is provided, validate and use it
+      if (iosModelName) {
+        // If the iosModelName has an extension, treat as full path/URL
+        if (iosModelName.includes('.')) {
+          if (validateModelUrl(iosModelName)) {
+            viewer.setAttribute('ios-src', iosModelName);
+          } else {
+            console.warn('Invalid iOS model provided, using default iOS model as fallback');
+            viewer.setAttribute('ios-src', modelPaths.iosSrc);
+          }
+        } else {
+          // If iosModelName doesn't have an extension, generate path with .usdz extension
+          viewer.setAttribute('ios-src', `models/${iosModelName}.usdz`);
+        }
+      } else {
+        // Use generated iOS model path
+        viewer.setAttribute('ios-src', modelPaths.iosSrc);
+      }
+    } else {
+      // Show error for missing model parameter
+      const errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = 'No model provided. Please add ?model=MODEL_NAME (e.g., chickBurger for chickBurger.glb) to the URL.';
+      errorMessage.style.display = 'block';
+    }
+
+    // AR button functionality
+    const btn = document.querySelector("#ar-button");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        const viewer = document.querySelector("#viewer");
+        if (viewer && viewer.canActivateAR) {
+          viewer.activateAR();
+        } else if (viewer) {
+          viewer.dispatchEvent(new CustomEvent('ar-trigger'));
+        }
+      });
+    }
+
+    // When AR closes → show button again automatically
+    const viewer = document.querySelector("#viewer");
+    if (viewer) {
+      viewer.addEventListener('ar-status', (event) => {
+        const btn = document.querySelector("#ar-button");
+        if (btn && event.detail.status === 'not-presenting') {
+          btn.style.display = "flex";
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

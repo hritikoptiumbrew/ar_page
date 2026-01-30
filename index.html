@@ -1,191 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="UTF-8" />
-<title>Dynamic AR Model Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Menu's | The Future of Interactive Dining</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --primary-glow: rgba(255, 107, 53, 0.4);
+            --secondary: #2D1B1A;
+            --accent: #E87A5D;
+            --bg: #FAFAFA;
+            --white: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.7);
+            --text-main: #1A1A1A;
+            --text-muted: #5F5F5F;
+            --border: rgba(0, 0, 0, 0.08);
+            --inner-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
 
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
 
-<style>
-  body {
-    margin:0;
-    background:#fff;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    height:100vh;
-  }
+        html {
+            scroll-behavior: smooth;
+        }
 
-  /* Model Takes ~70% of Screen */
-  #viewer-box {
-    flex: 0 0 70%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:100%;
-  }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
 
+        /* --- Utility Classes --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
 
-  #viewer-box {
-    display:block;
-    justify-content:center;
-    align-items:center;
-    width:100vw;
-    height:90vh;
-  }
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
 
-  model-viewer {
-    width:100%;
-    height:100%;
-    background:#fff;
-  }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-  /* AR Button Area (~20% of screen) */
-  #button-area {
-    flex: 0 0 20%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  }
+        /* --- Animations --- */
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-  #ar-button {
-    background:black;
-    color:white;
-    border:none;
-    padding:14px 22px;
-    font-size:18px;
-    border-radius:8px;
-    cursor:pointer;
-    width: 70%;
-    max-width:260px;
-    text-align:center;
-  }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  /* Bottom Spacing (~10%) */
-  #bottom-space {
-    flex: 0 0 10%;
-  }
-  
-  #error-message {
-    color: red;
-    text-align: center;
-    padding: 10px;
-    display: none;
-  }
-</style>
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(1deg);
+            }
+        }
+
+        .reveal {
+            animation: reveal 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 80px);
+            max-width: 1200px;
+            height: 70px;
+            border-radius: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--secondary);
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 14px;
+            margin-left: 30px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--secondary);
+            color: var(--white) !important;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-left: 30px;
+        }
+
+        /* --- Hero --- */
+        .hero {
+            padding: 200px 0 120px;
+            background: radial-gradient(circle at top right, rgba(232, 122, 93, 0.08), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(255, 107, 53, 0.05), transparent 40%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(255, 107, 53, 0.08);
+            color: var(--primary);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: 84px;
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 30px;
+            letter-spacing: -3px;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 18px 36px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 14px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-main {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-main:hover {
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            border: 1px solid var(--border);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: #F0F0F0;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-main-img {
+            width: 100%;
+            height: auto;
+            border-radius: 48px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.12);
+            animation: float 10s ease-in-out infinite;
+        }
+
+        /* --- Gallery Section --- */
+        .gallery-section {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-wrap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .food-card {
+            border-radius: 32px;
+            padding: 24px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            background: #F9F9F9;
+        }
+
+        .food-card:hover {
+            transform: translateY(-20px);
+            background: var(--white);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.06);
+        }
+
+        .food-img-frame {
+            width: 100%;
+            height: 300px;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .food-img-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .food-card:hover .food-img-frame img {
+            transform: scale(1.1);
+        }
+
+        .food-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .food-info p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .ar-link {
+            width: 100%;
+            padding: 14px;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: 0.3s;
+        }
+
+        .ar-link:hover {
+            background: var(--primary);
+            box-shadow: 0 10px 20px var(--primary-glow);
+        }
+
+        /* --- Core Features --- */
+        .features-section {
+            padding: 140px 0;
+            background: #111111;
+            color: white;
+            border-radius: 60px 60px 0 0;
+            margin-top: -60px;
+        }
+
+        .features-section h2 {
+            color: white;
+        }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feat-card {
+            padding: 48px;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .feat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .feat-card i {
+            display: block;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        .feat-card h3 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .feat-card p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 64px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero h1,
+            .hero p {
+                margin: 0 auto 30px;
+            }
+
+            .hero-ctas {
+                justify-content: center;
+            }
+
+            .gallery-wrap,
+            .feat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                width: calc(100% - 40px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+                letter-spacing: -1px;
+            }
+
+            .container {
+                padding: 0 24px;
+            }
+        }
+
+        footer {
+            padding: 80px 0;
+            text-align: center;
+            background: #111111;
+            color: rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 
 <body>
+    <header class="glass">
+        <a href="#" class="logo">AR <span>Menu's</span></a>
+        <nav>
+            <a href="#gallery">Gallery</a>
+            <a href="#features">Features</a>
+            <a href="menu.html" class="nav-cta">Go to Menu</a>
+        </nav>
+    </header>
 
-<div id="viewer-box">
-  <model-viewer id="viewer"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    camera-controls
-    shadow-intensity="1"
-    exposure="1.2">
-  </model-viewer>
-</div>
+    <section class="hero container">
+        <div class="hero-grid">
+            <div class="hero-content reveal">
+                <div class="hero-badge">Next-Gen Dining</div>
+                <h1>The Future of <span class="gradient-text">Interactive</span> Menus is Here.</h1>
+                <p>Increase sales by 25% and delight customers with hyper-realistic Augmented Reality previews of every
+                    dish. Built for the modern SaaS-enabled restaurant.</p>
+                <div class="hero-ctas">
+                    <a href="menu.html" class="btn btn-main">Launch Live Menu</a>
+                    <a href="#gallery" class="btn btn-outline">Explore Gallery</a>
+                </div>
+            </div>
+            <div class="hero-visual reveal" style="animation-delay: 0.2s;">
+                <img src="assets/hero.png" alt="SaaS AR Hero" class="hero-main-img">
+            </div>
+        </div>
+    </section>
 
-<div id="error-message"></div>
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Our Interactive <span class="gradient-text">Selection</span></h2>
+                <p>High-fidelity 3D assets optimized for instant delivery.</p>
+            </div>
+            <div class="gallery-wrap">
+                <div class="food-card reveal" style="animation-delay: 0.1s;">
+                    <div class="food-img-frame"><img src="assets/burger.png" alt="Burger"></div>
+                    <div class="food-info">
+                        <h3>Luxe Burger</h3>
+                        <p>A masterpiece of flavor and 3D precision.</p>
+                        <a href="viewer.html?model=chickenBurger" class="ar-link">Launch AR Viewer</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.2s;">
+                    <div class="food-img-frame"><img src="assets/cake.png" alt="Cheesecake"></div>
+                    <div class="food-info">
+                        <h3>Velvet Cake</h3>
+                        <p>Indulgence meets digital craftsmanship.</p>
+                        <a href="viewer.html?model=strawberryCheesecake" class="ar-link">Launch AR Viewer</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.3s;">
+                    <div class="food-img-frame"><img src="assets/taco.png" alt="Taco"></div>
+                    <div class="food-info">
+                        <h3>Street Tacos</h3>
+                        <p>Vibrant colors, authentic spatial feel.</p>
+                        <a href="viewer.html?model=taco" class="ar-link">Launch AR Viewer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- <div id="button-area">
-  <button id="ar-button">View in your space</button>
-</div>
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Smart Features for <span style="color: var(--primary);">Smart</span> Business</h2>
+                <p style="color: rgba(255,255,255,0.4);">Scale your restaurant with technology that actually converts.
+                </p>
+            </div>
+            <div class="feat-grid">
+                <div class="feat-card reveal" style="animation-delay: 0.1s;">
+                    <i></i>
+                    <h3>Draco Optimized</h3>
+                    <p>Proprietary compression that delivers 20MB models in under 1.5MB for lag-free mobile viewing.</p>
+                </div>
+                <div class="feat-card reveal" style="animation-delay: 0.2s;">
+                    <i></i>
+                    <h3>Native iOS/Android</h3>
+                    <p>One-click AR integration that utilizes native QuickLook and WebXR for the best performance.</p>
+                </div>
+                <div class="feat-card reveal" style="animation-delay: 0.3s;">
+                    <i></i>
+                    <h3>Conversion Driven</h3>
+                    <p>Designed to reduce order hesitation and build trust through visual certainty.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div id="bottom-space"></div> -->
-
-<script>
-  // Function to get URL parameter by name
-  function getUrlParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-  }
-
-  // Function to validate the model URL
-  function validateModelUrl(url) {
-    // Check if the URL has a valid 3D model extension
-    const validExtensions = ['.glb', '.gltf', '.usdz', '.fbx', '.obj'];
-    const lowerUrl = url.toLowerCase();
-    return validExtensions.some(ext => lowerUrl.includes(ext));
-  }
-
-  // Function to generate file paths from model name
-  function generateModelPaths(modelName) {
-    // If modelName includes a file extension, treat it as a path/URL
-    if (modelName && modelName.includes('.')) {
-      return { src: modelName, iosSrc: modelName };
-    }
-
-    // Otherwise, treat as model name and generate relative paths in the project
-    return {
-      src: `${modelName}.glb`,
-      iosSrc: `${modelName}.usdz`
-    };
-  }
-
-  // Get the model name from the 'model' parameter
-  const modelName = getUrlParameter('model');
-  const iosModelName = getUrlParameter('ios-model'); // Allow override via ios-model param
-
-  // Validate and set the model source
-  if (modelName) {
-    const viewer = document.querySelector("#viewer");
-    
-    // Generate paths for the model
-    const modelPaths = generateModelPaths(modelName);
-    viewer.setAttribute('src', modelPaths.src);
-    
-    // Set iOS source - if specific iOS model is provided, validate and use it
-    if (iosModelName) {
-      // If the iosModelName has an extension, treat as full path/URL
-      if (iosModelName.includes('.')) {
-        if (validateModelUrl(iosModelName)) {
-          viewer.setAttribute('ios-src', iosModelName);
-        } else {
-          console.warn('Invalid iOS model provided, using default iOS model as fallback');
-          viewer.setAttribute('ios-src', modelPaths.iosSrc);
-        }
-      } else {
-        // If iosModelName doesn't have an extension, generate path with .usdz extension
-        viewer.setAttribute('ios-src', `${iosModelName}.usdz`);
-      }
-    } else {
-      // Use generated iOS model path
-      viewer.setAttribute('ios-src', modelPaths.iosSrc);
-    }
-  } else {
-    // Show error for missing model parameter
-    const errorMessage = document.getElementById('error-message');
-    errorMessage.textContent = 'No model provided. Please add ?model=MODEL_NAME (e.g., chickBurger for chickBurger.glb) to the URL.';
-    errorMessage.style.display = 'block';
-  }
-
-  // AR button functionality
-  const btn = document.querySelector("#ar-button");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      const viewer = document.querySelector("#viewer");
-      if (viewer && viewer.canActivateAR) {
-        viewer.activateAR();
-      } else if (viewer) {
-        viewer.dispatchEvent(new CustomEvent('ar-trigger'));
-      }
-    });
-  }
-
-  // When AR closes → show button again automatically
-  const viewer = document.querySelector("#viewer");
-  if (viewer) {
-    viewer.addEventListener('ar-status', (event) => {
-      const btn = document.querySelector("#ar-button");
-      if (btn && event.detail.status === 'not-presenting') {
-        btn.style.display = "flex";
-      }
-    });
-  }
-</script>
-
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AR Menu's. The Gold Standard in Visual Dining. Powered by LUXE-AR Technology.</p>
+        </div>
+    </footer>
 </body>
+
 </html>
