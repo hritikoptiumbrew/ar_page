@@ -69,9 +69,9 @@
 
         /* --- Utility Classes --- */
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 0 80px;
+            padding: 0 50px;
         }
 
         .glass {
@@ -209,20 +209,21 @@
 
         /* --- Hero --- */
         .hero {
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
-            padding: 100px 0 60px;
+            padding-top: 80px;
             background:
-                radial-gradient(circle at 90% 10%, rgba(255, 107, 53, 0.1), transparent 40%),
-                radial-gradient(circle at 10% 90%, rgba(232, 122, 93, 0.08), transparent 40%),
+                radial-gradient(circle at 90% 10%, rgba(255, 107, 53, 0.12), transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(232, 122, 93, 0.1), transparent 40%),
                 var(--bg);
+            overflow: hidden;
         }
 
         .hero-grid {
             display: grid;
             grid-template-columns: 1.1fr 0.9fr;
-            gap: 100px;
+            gap: 60px;
             align-items: center;
             width: 100%;
         }
@@ -241,19 +242,19 @@
         }
 
         .hero h1 {
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 900;
-            line-height: 1.0;
+            line-height: 1.05;
             margin-bottom: 24px;
-            letter-spacing: -2.5px;
+            letter-spacing: -2px;
         }
 
         .hero p {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-muted);
             margin-bottom: 40px;
-            max-width: 580px;
-            line-height: 1.4;
+            max-width: 540px;
+            line-height: 1.5;
         }
 
         .hero-ctas {
@@ -582,7 +583,7 @@
             </div>
             <div class="hero-visual reveal" style="animation-delay: 0.2s;">
                 <div class="video-container"
-                    style="border-radius: 32px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.12); background: #000; border: 1px solid var(--border); aspect-ratio: 9/16; max-height: 70vh; margin-left: auto;">
+                    style="border-radius: 32px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.15); background: #000; border: 1px solid var(--border); aspect-ratio: 9/16; max-height: 65vh; margin-left: auto;">
                     <video width="100%" height="100%" autoplay loop playsinline controls
                         style="display: block; object-fit: cover;">
                         <source src="assets/promo_video.mp4" type="video/mp4">
