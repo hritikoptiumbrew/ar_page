@@ -1,329 +1,973 @@
-<<!DOCTYPE html>
-    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-    <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-    <html>
+<!doctype html>
+<html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Menu</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>MenuXR - Interactive AR Menu</title>
 
-    <body>
-        <div>
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-                .flyer-container-menu {
-                    width: 816px;
-                    height: 1056px;
-                    font-family: 'Montserrat', sans-serif;
-                    background-color: #FAFAFA;
-                    position: relative;
-                    overflow: hidden;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
-                .flyer-container-menu a {
-                    text-decoration: none;
-                    color: inherit;
-                }
+    <style>
+        /* --- THEME VARIABLES (Landing Page Colors) --- */
+        :root {
+            --primary: #FF6B35;
+            --primary-glow: rgba(255, 107, 53, 0.4);
+            --accent: #E87A5D;
+            --bg-dark: #050505;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
 
-                .menu-background-shape1 {
-                    position: absolute;
-                    top: -150px;
-                    left: -200px;
-                    width: 500px;
-                    height: 500px;
-                    background: linear-gradient(135deg, #FFDDC1, #FFC3A0);
-                    border-radius: 50%;
-                    opacity: 0.4;
-                    filter: blur(50px);
-                }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
-                .menu-background-shape2 {
-                    position: absolute;
-                    bottom: -200px;
-                    right: -180px;
-                    width: 600px;
-                    height: 600px;
-                    background: linear-gradient(135deg, #FFAB73, #FF8C42);
-                    border-radius: 45% 55% 70% 30% / 30% 50% 50% 70%;
-                    opacity: 0.3;
-                    filter: blur(60px);
-                    transform: rotate(20deg);
-                }
+        /* --- LIVE BACKGROUND --- */
+        @keyframes subtleDrift {
+            0% {
+                background-position: 0% 50%;
+            }
 
-                .menu-header {
-                    margin-top: 80px;
-                    margin-bottom: 50px;
-                    text-align: center;
-                    z-index: 2;
-                }
+            50% {
+                background-position: 100% 50%;
+            }
 
-                .menu-header h1 {
-                    font-family: 'Montserrat', sans-serif;
-                    font-weight: 800;
-                    font-size: 72px;
-                    color: #4A2E2C;
-                    margin: 0;
-                    letter-spacing: 2px;
-                    position: relative;
-                }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
 
-                .menu-header h1::after {
-                    content: '';
-                    display: block;
-                    width: 120px;
-                    height: 4px;
-                    background-color: #E87A5D;
-                    margin: 20px auto 0;
-                    border-radius: 2px;
-                }
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(125deg, #050505, #111111, #080808);
+            background-size: 300% 300%;
+            animation: subtleDrift 20s ease infinite;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            color: var(--text-main);
+        }
 
-                .menu-grid {
-                    display: grid;
-                    grid-template-columns: repeat(2, 350px);
-                    gap: 40px;
-                    padding: 0 40px;
-                    z-index: 2;
-                }
+        .wrap {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-                .menu-item-link {
-                    display: block;
-                    text-decoration: none;
-                }
+        /* --- VIEWER --- */
+        .viewer-container {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 25vh;
+        }
 
-                .menu-item {
-                    background-color: rgba(255, 255, 255, 0.6);
-                    border-radius: 15px;
-                    padding: 25px;
-                    display: flex;
-                    align-items: center;
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    cursor: pointer;
-                    border: 1px solid rgba(255, 255, 255, 0.8);
-                }
+        /* The 3D Model Viewer */
+        #dishModel {
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            filter: drop-shadow(0 30px 50px rgba(255, 107, 53, 0.3));
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: scale(1);
+            will-change: transform, opacity;
+            --poster-color: transparent;
+        }
 
-                .menu-item:hover {
-                    transform: translateY(-8px);
-                    box-shadow: 0 12px 25px rgba(232, 122, 93, 0.2);
-                }
+        #dishModel.swapping-out {
+            opacity: 0 !important;
+            transform: scale(0.9) translateY(20px);
+        }
 
-                .menu-item-icon {
-                    width: 50px;
-                    height: 50px;
-                    margin-right: 20px;
-                    flex-shrink: 0;
-                }
+        #dishModel.swapping-in {
+            opacity: 0 !important;
+            transform: scale(1.1) translateY(-20px);
+        }
 
-                .menu-item-icon svg {
-                    width: 100%;
-                    height: 100%;
-                    fill: #4A2E2C;
-                    transition: fill 0.3s ease;
-                }
+        #dishModel.hidden {
+            opacity: 0 !important;
+        }
 
-                .menu-item:hover .menu-item-icon svg {
-                    fill: #E87A5D;
-                }
+        /* Model Viewer Styling */
+        #dishModel::part(default-progress-bar) {
+            background: var(--primary);
+        }
 
-                .menu-item-name {
-                    font-size: 20px;
-                    font-weight: 700;
-                    color: #2D1B1A;
-                }
+        #dishModel::part(default-progress-mask) {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-                .menu-footer {
-                    position: absolute;
-                    bottom: 30px;
-                    font-size: 14px;
-                    color: #8C6D69;
-                    z-index: 2;
-                }
-            </style>
-            <div class="flyer-container-menu">
-                <div class="menu-background-shape1"></div>
-                <div class="menu-background-shape2"></div>
+        /* --- AR HOTSPOT ANNOTATIONS --- */
+        .hotspot {
+            display: block;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-                <div class="menu-header">
-                    <a href="/"
-                        style="font-size: 14px; color: var(--primary); margin-bottom: 20px; display: inline-block; font-weight: 600;">&larr;
-                        BACK TO HOME</a>
-                    <h1>AR Menu's</h1>
-                </div>
+        .hotspot:not([data-visible]) {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-                <div class="menu-grid">
-                    <!-- Replace "#" with your actual links -->
-                    <a href="/viewer?model=vegBurger" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M56.8 38.3c-.6-1.1-1.2-2.1-1.9-3.1.2-1.3.3-2.6.3-4s-.1-2.7-.3-4c.7-1 1.3-2 1.9-3.1 1.2-2.2.7-5.1-1.2-6.5l-2.9-2.2c-1.3-1-3.2-.9-4.7.1-.9.7-1.8 1.4-2.7 2.2-2-1-4.2-1.8-6.5-2.2.3-1.6.5-3.2.5-4.8V2.5c0-2.4-2-4.5-4.5-4.5h-4c-2.4 0-4.5 2-4.5 4.5v5.3c0 1.6.2 3.2.5 4.8-2.3.4-4.5 1.2-6.5 2.2-.9-.8-1.8-1.5-2.7-2.2-1.5-1.1-3.4-1.2-4.7-.1l-2.9 2.2c-1.9 1.4-2.4 4.3-1.2 6.5.6 1.1 1.2 2.1 1.9 3.1-.2 1.3-.3 2.6-.3 4s.1 2.7.3 4c-.7 1-1.3 2-1.9 3.1-1.2 2.2-.7 5.1 1.2 6.5l2.9 2.2c1.3 1 3.2.9 4.7-.1.9-.7 1.8-1.4 2.7-2.2 2 1 4.2 1.8 6.5 2.2-.3 1.6-.5 3.2-.5 4.8v5.3c0 2.4 2 4.5 4.5 4.5h4c2.4 0 4.5-2 4.5-4.5v-5.3c0-1.6-.2-3.2-.5-4.8 2.3-.4 4.5-1.2 6.5-2.2.9.8 1.8 1.5 2.7 2.2 1.5 1.1 3.4 1.2 4.7.1l2.9-2.2c1.9-1.4 2.4-4.3 1.2-6.5zm-4.6-21.2c.5.9.9 1.9 1.3 2.9l-1.3 2.9c-.3.8-.5 1.6-.5 2.4v8.2c0 .8.2 1.6.5 2.4l1.3 2.9c-.4 1-.8 2-1.3 2.9l-2.9-2.2c-.8-.6-1.7-.9-2.6-.9h-3.6c-2.3 0-4.4.9-6 2.3l-1.8 1.7-1.8-1.7c-1.6-1.5-3.7-2.3-6-2.3h-3.6c-.9 0-1.8.3-2.6.9l-2.9 2.2c-.5-.9-.9-1.9-1.3-2.9l1.3-2.9c.3-.8.5-1.6.5-2.4v-8.2c0-.8-.2-1.6-.5-2.4l-1.3-2.9c.4-1 .8-2 1.3-2.9l2.9 2.2c.8.6 1.7.9 2.6.9h3.6c2.3 0 4.4-.9 6-2.3l1.8-1.7L31.1 16c1.6 1.5 3.7 2.3 6 2.3h3.6c.9 0 1.8-.3 2.6-.9l2.5-2.2z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Veg Burger</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=chickenBurger" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M51.9 33.6c-.5-1.1-.9-2.2-1.4-3.3.1-1.4.2-2.8.2-4.2s0-2.8-.2-4.2c.5-1.1.9-2.2 1.4-3.3 1-2.4.5-5.5-1.4-7l-3.1-2.4c-1.4-1.1-3.4-1-5 .1-1 .7-1.9 1.5-2.9 2.4-2.1-1.1-4.5-1.9-6.9-2.4.3-1.7.5-3.4.5-5.2V-3.7c0-2.6-2.2-4.8-4.8-4.8h-4.3c-2.6 0-4.8 2.2-4.8 4.8v5.7c0 1.7.2 3.5.5 5.2-2.4.4-4.8 1.3-6.9 2.4-1-.8-1.9-1.6-2.9-2.4-1.6-1.2-3.6-1.2-5-.1l-3.1 2.4c-1.9 1.5-2.4 4.6-1.4 7 .5 1.1.9 2.2 1.4 3.3-.1 1.4-.2 2.8-.2 4.2s0 2.8.2 4.2c-.5 1.1-.9 2.2-1.4 3.3-1 2.4-.5 5.5 1.4 7l3.1 2.4c1.4 1.1 3.4 1 5-.1 1-.7 1.9-1.5 2.9-2.4 2.1 1.1 4.5 1.9 6.9 2.4-.3 1.7-.5 3.4-.5 5.2v5.7c0 2.6 2.2 4.8 4.8 4.8h4.3c2.6 0 4.8-2.2 4.8-4.8v-5.7c0-1.7-.2-3.5-.5-5.2 2.4-.4 4.8-1.3 6.9-2.4 1 .8 1.9 1.6 2.9 2.4 1.6 1.2 3.6 1.2 5 .1l3.1-2.4c1.9-1.5 2.4-4.6 1.4-7zM32 44.5c-7 0-12.6-5.7-12.6-12.6s5.7-12.6 12.6-12.6 12.6 5.7 12.6 12.6-5.7 12.6-12.6 12.6z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Chicken Burger</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=pizza" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M57.6,18.9c-2-12.2-11.9-21.1-24.1-21.1C19.9-2.2,9.3,7.5,7.9,19.2c-10.4,2.8-13.8,14.6-7.1,23.1c3.9,4.9,9.4,7.1,15.1,7.1h23.5c8.8,0,16.2-7.3,16.2-16.2C55.6,27.3,57,22.6,57.6,18.9z M40.7,21.9c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1S43,21.9,40.7,21.9z M23.3,21.9c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1S25.6,21.9,23.3,21.9z M32,40.7c-4.9,0-8.8-3.9-8.8-8.8h17.7C40.8,36.7,36.9,40.7,32,40.7z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Pizza</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=friedChickenSandwich" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M60.8,24.1H3.2C1.4,24.1,0,25.6,0,27.3v9.5c0,1.7,1.4,3.2,3.2,3.2h57.6c1.7,0,3.2-1.4,3.2-3.2v-9.5C64,25.6,62.6,24.1,60.8,24.1z M59.2,35.2H4.8v-6.3h54.4V35.2z M27.3,10.6l-3.2-4.8C23.3,4.6,22,4,20.6,4H10.6C8.8,4,7.4,5.4,7.4,7.2v15.3h3.2V8.8h8.8l3.2,4.8h14.5v12.1h3.2V13.8c0-1.7-1.4-3.2-3.2-3.2H27.3z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Fried Chicken Sandwich</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=pasta" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M32,2C15.4,2,2,15.4,2,32s13.4,30,30,30s30-13.4,30-30S48.6,2,32,2z M32,58C17.7,58,6,46.3,6,32S17.7,6,32,6s26,11.7,26,26S46.3,58,32,58z" />
-                                    <path
-                                        d="M42.8,21.2c-2-2-4.7-3.1-7.5-3.1h-6.5c-5.9,0-10.8,4.8-10.8,10.8c0,2.8,1.1,5.5,3.1,7.5l9.2,9.2c0.6,0.6,1.4,0.9,2.2,0.9s1.6-0.3,2.2-0.9l9.2-9.2c2-2,3.1-4.7,3.1-7.5C45.9,25.9,44.8,23.2,42.8,21.2z M32,41.5l-6.8-6.8c-1.2-1.2-1.9-2.9-1.9-4.6c0-3.6,2.9-6.5,6.5-6.5h6.5c3.6,0,6.5,2.9,6.5,6.5c0,1.7-0.6,3.3-1.9,4.6L32,41.5z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Pasta</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=friedChicken" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M48.8,25.8c-0.2-1.4-0.5-2.8-1-4.1c-1.3-3.6-3.6-6.7-6.6-8.9c-0.6-0.4-1.2-0.8-1.8-1.2c-4.4-2.8-9.5-4.5-14.8-4.5c-11.4,0-21.4,7-24.9,17.4c-0.4,1.3-0.7,2.6-0.8,3.9C-1.8,42.5,6.8,55.2,19.9,56.8c1.3,0.2,2.6,0.2,3.9,0.2h16.5c12.2,0,22.6-9.1,24.1-21.2C64.6,33.1,62.8,28.8,59.2,26C55.6,23.1,51.3,23.4,48.8,25.8z M46.2,35.3c-2,1.3-4.4,1.9-6.8,1.9H22.9c-2.4,0-4.8-0.6-6.8-1.9c-3.1-2-5-5.3-5-8.9c0-5.7,4.6-10.3,10.3-10.3h10.3c5.7,0,10.3,4.6,10.3,10.3C51.2,30,49.3,33.3,46.2,35.3z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Fried Chicken</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=rolls" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M54.5,2H9.5C5.4,2,2,5.4,2,9.5v45C2,58.6,5.4,62,9.5,62h45c4.1,0,7.5-3.4,7.5-7.5v-45C62,5.4,58.6,2,54.5,2z M58,54.5c0,1.9-1.6,3.5-3.5,3.5h-45C7.6,58,6,56.4,6,54.5v-45C6,7.6,7.6,6,9.5,6h45C56.4,6,58,7.6,58,9.5V54.5z" />
-                                    <path
-                                        d="M46.3,17.7H17.7c-2.1,0-3.8,1.7-3.8,3.8v21c0,2.1,1.7,3.8,3.8,3.8h28.5c2.1,0,3.8-1.7,3.8-3.8v-21C50,19.4,48.3,17.7,46.3,17.7z M46,42.5H18V21.5h28V42.5z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Rolls</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=frenchFries" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M46.5,2H17.5c-3.3,0-6,2.7-6,6v50c0,3.3,2.7,6,6,6h29c3.3,0,6-2.7,6-6V8C52.5,4.7,49.8,2,46.5,2z M48.5,58c0,1.1-0.9,2-2,2h-29c-1.1,0-2-0.9-2-2V8c0-1.1,0.9-2,2-2h29c1.1,0,2,0.9,2,2V58z" />
-                                    <rect x="22.5" y="12" width="4" height="40" />
-                                    <rect x="30.5" y="12" width="4" height="40" />
-                                    <rect x="38.5" y="12" width="4" height="40" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">French Fries</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=hakkaNoodles" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M54.5,2H9.5C5.4,2,2,5.4,2,9.5v45C2,58.6,5.4,62,9.5,62h45c4.1,0,7.5-3.4,7.5-7.5v-45C62,5.4,58.6,2,54.5,2z M22,48h-4V16h4V48z M34,48h-4V16h4V48z M46,48h-4V16h4V48z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Hakka Noodles</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=momos" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M32,2C15.4,2,2,15.4,2,32s13.4,30,30,30s30-13.4,30-30S48.6,2,32,2z M32,58C17.7,58,6,46.3,6,32S17.7,6,32,6s26,11.7,26,26S46.3,58,32,58z" />
-                                    <circle cx="24" cy="24" r="4" />
-                                    <circle cx="40" cy="24" r="4" />
-                                    <path d="M44,36H20c-1.1,0-2,0.9-2,2s0.9,2,2,2h24c1.1,0,2-0.9,2-2S45.1,36,44,36z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Momos</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=pizzaSpecial" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M57.6,18.9c-2-12.2-11.9-21.1-24.1-21.1C19.9-2.2,9.3,7.5,7.9,19.2c-10.4,2.8-13.8,14.6-7.1,23.1c3.9,4.9,9.4,7.1,15.1,7.1h23.5c8.8,0,16.2-7.3,16.2-16.2C55.6,27.3,57,22.6,57.6,18.9z M40.7,21.9c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1S43,21.9,40.7,21.9z M23.3,21.9c-2.3,0-4.1-1.8-4.1-4.1s1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1S25.6,21.9,23.3,21.9z M32,40.7c-4.9,0-8.8-3.9-8.8-8.8h17.7C40.8,36.7,36.9,40.7,32,40.7z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Special Pizza</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=strawberryCheesecake" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M32,2C15.4,2,2,15.4,2,32s13.4,30,30,30s30-13.4,30-30S48.6,2,32,2z M32,58C17.7,58,6,46.3,6,32S17.7,6,32,6s26,11.7,26,26S46.3,58,32,58z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Cheesecake</div>
-                        </div>
-                    </a>
-                    <a href="/viewer?model=taco" class="menu-item-link">
-                        <div class="menu-item">
-                            <div class="menu-item-icon">
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M60.8,24.1H3.2C1.4,24.1,0,25.6,0,27.3v9.5c0,1.7,1.4,3.2,3.2,3.2h57.6c1.7,0,3.2-1.4,3.2-3.2v-9.5C64,25.6,62.6,24.1,60.8,24.1z M59.2,35.2H4.8v-6.3h54.4V35.2z" />
-                                </svg>
-                            </div>
-                            <div class="menu-item-name">Taco</div>
-                        </div>
-                    </a>
-                </div>
+        .hotspot-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
 
-                <div class="menu-footer">
-                    Click on any item to view details and order online.
-                </div>
-            </div>
+        .hotspot-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .hotspot-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hotspot-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .hotspot-benefit {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        .hotspot::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--hotspot-color, #FF6B35);
+            box-shadow: 0 0 10px var(--hotspot-color, #FF6B35);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        /* Mobile Responsive for 3D Model */
+        @media (max-width: 600px) {
+            #dishModel {
+                max-width: 90%;
+                height: 400px;
+            }
+
+            .hotspot {
+                padding: 6px 10px;
+            }
+
+            .hotspot-name {
+                font-size: 10px;
+            }
+
+            .hotspot-benefit {
+                font-size: 8px;
+            }
+
+            .hotspot-icon {
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+            }
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .brand-tag {
+            font-size: 10px;
+            letter-spacing: 3px;
+            padding: 8px 20px 8px 23px;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        /* --- INTERFACE --- */
+        .book-interface {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 48vh;
+            z-index: 10;
+            background: linear-gradient(to top, #000 10%, rgba(10, 10, 10, 0.95) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 40px;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 55%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--primary);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .nav-prev {
+            left: 20px;
+        }
+
+        .nav-next {
+            right: 20px;
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.2;
+            pointer-events: none;
+            border-color: transparent;
+        }
+
+        .page-content {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 60px;
+        }
+
+        /* Cascade Animation */
+        @keyframes smoothSettle {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-common {
+            opacity: 0;
+            animation: smoothSettle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            will-change: transform, opacity;
+        }
+
+        .anim-title {
+            animation-delay: 0.1s;
+        }
+
+        .anim-diet {
+            animation-delay: 0.15s;
+        }
+
+        .anim-price {
+            animation-delay: 0.2s;
+        }
+
+        .anim-ing {
+            animation-delay: 0.25s;
+        }
+
+        .anim-btn {
+            animation-delay: 0.3s;
+        }
+
+        .dish-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 34px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .diet-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .veg {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.3);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .non-veg {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .price {
+            font-size: 20px;
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .ingredients-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .ing-tag {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .btn-ar {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 45px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 0 30px var(--primary-glow);
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px var(--primary-glow);
+        }
+
+        .btn-ar svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+
+        .btn-ar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: premiumSheen 3.5s infinite ease-in-out;
+        }
+
+        @keyframes premiumSheen {
+            0% {
+                left: -150%;
+            }
+
+            50% {
+                left: 150%;
+            }
+
+            100% {
+                left: 150%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dish-title {
+                font-size: 28px;
+            }
+
+            .page-content {
+                padding: 0 50px;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .nav-prev {
+                left: 10px;
+            }
+
+            .nav-next {
+                right: 10px;
+            }
+        }
+
+        body.ar-active .book-interface,
+        body.ar-active .header {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+
+        <div class="header">
+            <div class="brand-tag">MenuXR Collection</div>
         </div>
-    </body>
 
-    </html>
+        <div class="viewer-container">
+            <model-viewer id="dishModel" src="" alt="3D model of dish" camera-controls auto-rotate auto-rotate-delay="0"
+                rotation-per-second="20deg" environment-image="neutral" shadow-intensity="1" exposure="1"
+                camera-orbit="0deg 75deg 105%" min-camera-orbit="auto auto 80%" max-camera-orbit="auto auto 120%" ar
+                ar-modes="webxr scene-viewer quick-look" ar-scale="auto" interaction-prompt="none" loading="eager">
+            </model-viewer>
+        </div>
+
+        <div class="book-interface">
+            <button class="nav-btn nav-prev" id="btnPrev"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-btn nav-next" id="btnNext"><i class="fas fa-chevron-right"></i></button>
+            <div class="page-content" id="pageContent"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. ANALYTICS SETUP
+        // ==========================================
+        const GA_MEASUREMENT_ID = 'G-1Q36T0T22F';
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', GA_MEASUREMENT_ID);
+
+        // ==========================================
+        // 2. COMPLETE MENU DATA - ALL ITEMS
+        // ==========================================
+        const menuItems = [
+            // PIZZAS
+            {
+                id: 'pizza',
+                title: "Italian Supreme Pizza",
+                price: "$16.95",
+                type: "Veg",
+                model: "pizza.glb",
+                usdz: "pizza.usdz",
+                category: "Main Course",
+                ingredients: [
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.2m 0.1m 0.15m", normal: "0 1 0" },
+                    { name: "Basil", color: "#4ade80", benefit: "Anti-inflammatory", position: "-0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Mozzarella", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Olives", color: "#a78bfa", benefit: "Healthy Fats", position: "0.1m 0.08m -0.15m", normal: "0 1 0" },
+                    { name: "Capsicum", color: "#4ade80", benefit: "Vitamin A", position: "-0.2m 0.1m -0.1m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'pizzaSpecial',
+                title: "Chef's Special Pizza",
+                price: "$19.95",
+                type: "Non-Veg",
+                model: "pizzaSpecial.glb",
+                usdz: "pizzaSpecial.usdz",
+                category: "Main Course",
+                ingredients: [
+                    { name: "Pepperoni", color: "#ff6b6b", benefit: "Protein", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Mushroom", color: "#d4a574", benefit: "Vitamin D", position: "-0.15m 0.1m 0.12m", normal: "0 1 0" },
+                    { name: "Onion", color: "#d8b4fe", benefit: "Antioxidants", position: "0.12m 0.08m -0.12m", normal: "0 1 0" }
+                ]
+            },
+
+            // BURGERS
+            {
+                id: 'chickenBurger',
+                title: "Classic Chicken Burger",
+                price: "$12.95",
+                type: "Non-Veg",
+                model: "chickenBurger.glb",
+                usdz: "chickenBurger.usdz",
+                category: "Fast Food",
+                ingredients: [
+                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Lettuce", color: "#4ade80", benefit: "Fiber", position: "0.12m 0.15m 0.08m", normal: "0 1 0" },
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "-0.12m 0.12m 0.08m", normal: "0 1 0" },
+                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.1m 0.15m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'vegBurger',
+                title: "Garden Veggie Burger",
+                price: "$10.95",
+                type: "Veg",
+                model: "vegBurger.glb",
+                usdz: "vegBurger.usdz",
+                category: "Fast Food",
+                ingredients: [
+                    { name: "Veggie Patty", color: "#4ade80", benefit: "Plant Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Lettuce", color: "#86efac", benefit: "Fiber", position: "0.12m 0.15m 0.08m", normal: "0 1 0" },
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Lycopene", position: "-0.12m 0.12m 0.08m", normal: "0 1 0" },
+                    { name: "Avocado", color: "#a3e635", benefit: "Omega-3", position: "0m 0.12m 0.15m", normal: "0 1 0" }
+                ]
+            },
+
+            // ASIAN CUISINE
+            {
+                id: 'pasta',
+                title: "Creamy Alfredo Pasta",
+                price: "$14.50",
+                type: "Veg",
+                model: "pasta.glb",
+                usdz: "pasta.usdz",
+                category: "Main Course",
+                ingredients: [
+                    { name: "Pasta", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Cream", color: "#ffffff", benefit: "Calcium", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Parmesan", color: "#fef3c7", benefit: "Protein", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
+                    { name: "Herbs", color: "#4ade80", benefit: "Antioxidants", position: "0.1m 0.15m -0.1m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'hakkaNoodles',
+                title: "Hakka Noodles",
+                price: "$11.95",
+                type: "Veg",
+                model: "hakkaNoodles.glb",
+                usdz: "hakkaNoodles.usdz",
+                category: "Asian",
+                ingredients: [
+                    { name: "Noodles", color: "#fef3c7", benefit: "Energy", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Cabbage", color: "#86efac", benefit: "Vitamin K", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Carrot", color: "#fdba74", benefit: "Vitamin A", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
+                    { name: "Capsicum", color: "#4ade80", benefit: "Vitamin C", position: "0.1m 0.08m -0.12m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'momos',
+                title: "Steamed Momos",
+                price: "$9.95",
+                type: "Veg",
+                model: "momos.glb",
+                usdz: "momos.usdz",
+                category: "Asian",
+                ingredients: [
+                    { name: "Dumpling", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Cabbage", color: "#86efac", benefit: "Fiber", position: "0.12m 0.08m 0.08m", normal: "0 1 0" },
+                    { name: "Ginger", color: "#fdba74", benefit: "Anti-inflammatory", position: "-0.12m 0.08m 0.08m", normal: "0 1 0" },
+                    { name: "Garlic", color: "#fef3c7", benefit: "Immunity", position: "0m 0.05m 0.12m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'dumplings',
+                title: "Pan-Fried Dumplings",
+                price: "$13.95",
+                type: "Non-Veg",
+                model: "dumplings.glb",
+                usdz: "dumplings.usdz",
+                category: "Asian",
+                ingredients: [
+                    { name: "Pork", color: "#fdba74", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Chives", color: "#4ade80", benefit: "Vitamin K", position: "0.1m 0.1m 0.08m", normal: "0 1 0" },
+                    { name: "Ginger", color: "#fdba74", benefit: "Digestion", position: "-0.1m 0.08m 0.08m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'rolls',
+                title: "Spring Rolls",
+                price: "$8.95",
+                type: "Veg",
+                model: "rolls.glb",
+                usdz: "rolls.usdz",
+                category: "Asian",
+                ingredients: [
+                    { name: "Wrapper", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Vegetables", color: "#4ade80", benefit: "Vitamins", position: "0.1m 0.08m 0.08m", normal: "0 1 0" },
+                    { name: "Soy Sauce", color: "#8b4513", benefit: "Flavor", position: "-0.1m 0.08m 0.08m", normal: "0 1 0" }
+                ]
+            },
+
+            // SIDES
+            {
+                id: 'frenchFries',
+                title: "Golden French Fries",
+                price: "$5.95",
+                type: "Veg",
+                model: "frenchFries.glb",
+                usdz: "frenchFries.usdz",
+                category: "Sides",
+                ingredients: [
+                    { name: "Potato", color: "#fef3c7", benefit: "Potassium", position: "0m 0.12m 0m", normal: "0 1 0" },
+                    { name: "Salt", color: "#ffffff", benefit: "Sodium", position: "0.1m 0.15m 0.08m", normal: "0 1 0" },
+                    { name: "Oil", color: "#fdba74", benefit: "Energy", position: "-0.1m 0.12m 0.08m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'friedChicken',
+                title: "Crispy Fried Chicken",
+                price: "$13.95",
+                type: "Non-Veg",
+                model: "friedChicken.glb",
+                usdz: "friedChicken.usdz",
+                category: "Sides",
+                ingredients: [
+                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Spices", color: "#ff6b6b", benefit: "Flavor", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
+                    { name: "Coating", color: "#fef3c7", benefit: "Crunch", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" }
+                ]
+            },
+
+            // MEXICAN
+            {
+                id: 'taco',
+                title: "Mexican Street Taco",
+                price: "$11.95",
+                type: "Non-Veg",
+                model: "taco.glb",
+                usdz: "taco.usdz",
+                category: "Mexican",
+                ingredients: [
+                    { name: "Beef", color: "#8b4513", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Lettuce", color: "#4ade80", benefit: "Fiber", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" },
+                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0.1m", normal: "0 1 0" }
+                ]
+            },
+
+            // SANDWICHES
+            {
+                id: 'friedChickenSandwich',
+                title: "Fried Chicken Sandwich",
+                price: "$12.95",
+                type: "Non-Veg",
+                model: "friedChickenSandwich.glb",
+                usdz: "friedChickenSandwich.usdz",
+                category: "Fast Food",
+                ingredients: [
+                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Pickles", color: "#86efac", benefit: "Probiotics", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
+                    { name: "Mayo", color: "#fef3c7", benefit: "Flavor", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" },
+                    { name: "Bun", color: "#d4a574", benefit: "Carbs", position: "0m 0.15m 0m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'hotDog',
+                title: "Classic Hot Dog",
+                price: "$7.95",
+                type: "Non-Veg",
+                model: "hotDog.glb",
+                usdz: "hotDog.usdz",
+                category: "Fast Food",
+                ingredients: [
+                    { name: "Sausage", color: "#ff6b6b", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Bun", color: "#d4a574", benefit: "Carbs", position: "0m 0.12m 0m", normal: "0 1 0" },
+                    { name: "Mustard", color: "#fbbf24", benefit: "Flavor", position: "0.1m 0.1m 0.08m", normal: "0 1 0" },
+                    { name: "Ketchup", color: "#ff6b6b", benefit: "Lycopene", position: "-0.1m 0.1m 0.08m", normal: "0 1 0" }
+                ]
+            },
+
+            // DESSERTS
+            {
+                id: 'strawberryCheesecake',
+                title: "Strawberry Cheesecake",
+                price: "$8.95",
+                type: "Veg",
+                model: "strawberryCheesecake.glb",
+                usdz: "strawberryCheesecake.usdz",
+                category: "Dessert",
+                ingredients: [
+                    { name: "Cream Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.12m 0m", normal: "0 1 0" },
+                    { name: "Strawberry", color: "#ff6b6b", benefit: "Vitamin C", position: "0.1m 0.15m 0.08m", normal: "0 1 0" },
+                    { name: "Graham Crust", color: "#d4a574", benefit: "Fiber", position: "0m 0.05m 0m", normal: "0 1 0" },
+                    { name: "Sugar", color: "#ffffff", benefit: "Energy", position: "-0.1m 0.12m 0.08m", normal: "0 1 0" }
+                ]
+            },
+
+            // BEVERAGES
+            {
+                id: 'milkshake',
+                title: "Chocolate Milkshake",
+                price: "$6.95",
+                type: "Veg",
+                model: "milkshake.glb",
+                usdz: "milkshake.usdz",
+                category: "Beverage",
+                ingredients: [
+                    { name: "Milk", color: "#ffffff", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Chocolate", color: "#8b4513", benefit: "Antioxidants", position: "0m 0.12m 0m", normal: "0 1 0" },
+                    { name: "Ice Cream", color: "#fef3c7", benefit: "Creamy", position: "0m 0.18m 0m", normal: "0 1 0" },
+                    { name: "Whipped Cream", color: "#ffffff", benefit: "Indulgence", position: "0m 0.2m 0m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'croissantCoffee',
+                title: "Croissant & Coffee",
+                price: "$9.95",
+                type: "Veg",
+                model: "croissantCoffee.glb",
+                usdz: "croissantCoffee.usdz",
+                category: "Breakfast",
+                ingredients: [
+                    { name: "Croissant", color: "#d4a574", benefit: "Carbs", position: "0.1m 0.08m 0m", normal: "0 1 0" },
+                    { name: "Butter", color: "#fef3c7", benefit: "Flavor", position: "0.12m 0.1m 0.05m", normal: "0 1 0" },
+                    { name: "Coffee", color: "#8b4513", benefit: "Energy", position: "-0.1m 0.12m 0m", normal: "0 1 0" },
+                    { name: "Milk", color: "#ffffff", benefit: "Calcium", position: "-0.12m 0.15m 0m", normal: "0 1 0" }
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        const dishModel = document.getElementById('dishModel');
+        const pageContent = document.getElementById('pageContent');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+
+        function createHotspots(item) {
+            const existingHotspots = dishModel.querySelectorAll('.hotspot');
+            existingHotspots.forEach(h => h.remove());
+
+            item.ingredients.forEach((ing, index) => {
+                const hotspot = document.createElement('button');
+                hotspot.className = 'hotspot';
+                hotspot.slot = `hotspot-${index + 1}`;
+                hotspot.setAttribute('data-position', ing.position);
+                hotspot.setAttribute('data-normal', ing.normal);
+                hotspot.style.setProperty('--hotspot-color', ing.color);
+
+                hotspot.innerHTML = `
+                    <div class="hotspot-content">
+                        <div class="hotspot-icon" style="background: ${ing.color};">
+                            <i class="fas fa-leaf" style="color: #000; font-size: 10px;"></i>
+                        </div>
+                        <div class="hotspot-text">
+                            <div class="hotspot-name">${ing.name}</div>
+                            <div class="hotspot-benefit">● ${ing.benefit}</div>
+                        </div>
+                    </div>
+                `;
+
+                dishModel.appendChild(hotspot);
+            });
+        }
+
+        function renderPage(index) {
+            const item = menuItems[index];
+
+            gtag('event', 'view_dish', {
+                'event_category': 'Menu',
+                'event_label': item.title
+            });
+
+            dishModel.src = item.model;
+            dishModel.setAttribute('ios-src', item.usdz);
+
+            createHotspots(item);
+
+            let ingHTML = '';
+            item.ingredients.forEach(ing => {
+                ingHTML += `<div class="ing-tag"><span class="dot" style="background: ${ing.color};"></span>${ing.name}</div>`;
+            });
+
+            const badgeClass = item.type === "Veg" ? "veg" : "non-veg";
+
+            const html = `
+            <div class="anim-common anim-title"><h1 class="dish-title">${item.title}</h1></div>
+            <div class="anim-common anim-diet"><span class="diet-badge ${badgeClass}">${item.type}</span></div>
+            <div class="anim-common anim-price"><span class="price">${item.price}</span></div>
+            <div class="anim-common anim-ing"><div class="ingredients-row">${ingHTML}</div></div>
+            <div class="anim-common anim-btn">
+                <button id="arBtn" class="btn-ar" onclick="activateAR()">
+                    <svg viewBox="0 0 24 24"><path d="M3 4c0-1.1.9-2 2-2h4V0H5C2.24 0 0 2.24 0 5v4h2V5zm0 10H0v4c0 2.76 2.24 5 5 5h4v-2H5c-1.1 0-2-.9-2-2v-3zm18-5V5c0-1.1-.9-2-2-2h-3V0h3c2.76 0 5 2.24 5 5v4h-2zm-2 10c1.1 0 2-.9 2-2v-3h2v3c0 2.76-2.24 5-5 5h-3v-2h3z"/></svg>
+                    <span>View on your table</span>
+                </button>
+            </div>
+        `;
+
+            pageContent.innerHTML = html;
+            btnPrev.classList.toggle('disabled', index === 0);
+            btnNext.classList.toggle('disabled', index === menuItems.length - 1);
+        }
+
+        async function turnPage(direction) {
+            if (isAnimating) return;
+            const newIndex = currentIndex + direction;
+            if (newIndex < 0 || newIndex >= menuItems.length) return;
+
+            isAnimating = true;
+
+            dishModel.classList.add('swapping-out');
+            pageContent.innerHTML = '';
+
+            await new Promise(r => setTimeout(r, 300));
+
+            dishModel.classList.add('hidden');
+            currentIndex = newIndex;
+
+            const item = menuItems[currentIndex];
+
+            dishModel.src = item.model;
+            dishModel.setAttribute('ios-src', item.usdz);
+
+            renderPage(currentIndex);
+
+            await new Promise(r => setTimeout(r, 100));
+
+            dishModel.classList.remove('swapping-out');
+            dishModel.classList.add('swapping-in');
+            dishModel.classList.remove('hidden');
+
+            await new Promise(r => setTimeout(r, 100));
+
+            dishModel.classList.remove('swapping-in');
+            isAnimating = false;
+        }
+
+        window.activateAR = () => {
+            const item = menuItems[currentIndex];
+            gtag('event', 'start_ar', {
+                'event_category': 'Interaction',
+                'event_label': item.title
+            });
+            dishModel.activateAR();
+        };
+
+        btnPrev.addEventListener('click', () => turnPage(-1));
+        btnNext.addEventListener('click', () => turnPage(1));
+
+        dishModel.addEventListener('ar-status', (e) => {
+            if (e.detail.status === 'session-started' || e.detail.status === 'presenting') {
+                document.body.classList.add('ar-active');
+            } else {
+                document.body.classList.remove('ar-active');
+            }
+        });
+
+        // Initialize
+        renderPage(0);
+        dishModel.src = menuItems[0].model;
+        dishModel.setAttribute('ios-src', menuItems[0].usdz);
+
+    </script>
+</body>
+
+</html>
