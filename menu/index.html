@@ -74,7 +74,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-bottom: 25vh;
+            padding-bottom: 35vh;
         }
 
         /* The 3D Model Viewer */
@@ -567,22 +567,6 @@
         const menuItems = [
             // PIZZAS
             {
-                id: 'pizza',
-                title: "Italian Supreme Pizza",
-                price: "$16.95",
-                type: "Veg",
-                model: "pizza.glb",
-                usdz: "pizza.usdz",
-                category: "Main Course",
-                ingredients: [
-                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.2m 0.1m 0.15m", normal: "0 1 0" },
-                    { name: "Basil", color: "#4ade80", benefit: "Anti-inflammatory", position: "-0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Mozzarella", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
-                    { name: "Olives", color: "#a78bfa", benefit: "Healthy Fats", position: "0.1m 0.08m -0.15m", normal: "0 1 0" },
-                    { name: "Capsicum", color: "#4ade80", benefit: "Vitamin A", position: "-0.2m 0.1m -0.1m", normal: "0 1 0" }
-                ]
-            },
-            {
                 id: 'pizzaSpecial',
                 title: "Chef's Special Pizza",
                 price: "$19.95",
@@ -632,51 +616,6 @@
 
             // ASIAN CUISINE
             {
-                id: 'pasta',
-                title: "Creamy Alfredo Pasta",
-                price: "$14.50",
-                type: "Veg",
-                model: "pasta.glb",
-                usdz: "pasta.usdz",
-                category: "Main Course",
-                ingredients: [
-                    { name: "Pasta", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Cream", color: "#ffffff", benefit: "Calcium", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Parmesan", color: "#fef3c7", benefit: "Protein", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Herbs", color: "#4ade80", benefit: "Antioxidants", position: "0.1m 0.15m -0.1m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'hakkaNoodles',
-                title: "Hakka Noodles",
-                price: "$11.95",
-                type: "Veg",
-                model: "hakkaNoodles.glb",
-                usdz: "hakkaNoodles.usdz",
-                category: "Asian",
-                ingredients: [
-                    { name: "Noodles", color: "#fef3c7", benefit: "Energy", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Cabbage", color: "#86efac", benefit: "Vitamin K", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Carrot", color: "#fdba74", benefit: "Vitamin A", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Capsicum", color: "#4ade80", benefit: "Vitamin C", position: "0.1m 0.08m -0.12m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'momos',
-                title: "Steamed Momos",
-                price: "$9.95",
-                type: "Veg",
-                model: "momos.glb",
-                usdz: "momos.usdz",
-                category: "Asian",
-                ingredients: [
-                    { name: "Dumpling", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Cabbage", color: "#86efac", benefit: "Fiber", position: "0.12m 0.08m 0.08m", normal: "0 1 0" },
-                    { name: "Ginger", color: "#fdba74", benefit: "Anti-inflammatory", position: "-0.12m 0.08m 0.08m", normal: "0 1 0" },
-                    { name: "Garlic", color: "#fef3c7", benefit: "Immunity", position: "0m 0.05m 0.12m", normal: "0 1 0" }
-                ]
-            },
-            {
                 id: 'dumplings',
                 title: "Pan-Fried Dumplings",
                 price: "$13.95",
@@ -690,36 +629,8 @@
                     { name: "Ginger", color: "#fdba74", benefit: "Digestion", position: "-0.1m 0.08m 0.08m", normal: "0 1 0" }
                 ]
             },
-            {
-                id: 'rolls',
-                title: "Spring Rolls",
-                price: "$8.95",
-                type: "Veg",
-                model: "rolls.glb",
-                usdz: "rolls.usdz",
-                category: "Asian",
-                ingredients: [
-                    { name: "Wrapper", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Vegetables", color: "#4ade80", benefit: "Vitamins", position: "0.1m 0.08m 0.08m", normal: "0 1 0" },
-                    { name: "Soy Sauce", color: "#8b4513", benefit: "Flavor", position: "-0.1m 0.08m 0.08m", normal: "0 1 0" }
-                ]
-            },
 
             // SIDES
-            {
-                id: 'frenchFries',
-                title: "Golden French Fries",
-                price: "$5.95",
-                type: "Veg",
-                model: "frenchFries.glb",
-                usdz: "frenchFries.usdz",
-                category: "Sides",
-                ingredients: [
-                    { name: "Potato", color: "#fef3c7", benefit: "Potassium", position: "0m 0.12m 0m", normal: "0 1 0" },
-                    { name: "Salt", color: "#ffffff", benefit: "Sodium", position: "0.1m 0.15m 0.08m", normal: "0 1 0" },
-                    { name: "Oil", color: "#fdba74", benefit: "Energy", position: "-0.1m 0.12m 0.08m", normal: "0 1 0" }
-                ]
-            },
             {
                 id: 'friedChicken',
                 title: "Crispy Fried Chicken",
