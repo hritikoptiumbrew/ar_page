@@ -32,6 +32,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --primary: #FF6B35;
@@ -52,6 +53,7 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         html {
@@ -67,9 +69,9 @@
 
         /* --- Utility Classes --- */
         .container {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 0 60px;
         }
 
         .glass {
@@ -122,15 +124,22 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 80px);
-            max-width: 1200px;
-            height: 70px;
-            border-radius: 20px;
+            width: calc(100% - 60px);
+            max-width: 1300px;
+            height: 75px;
+            border-radius: 24px;
             z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 40px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        header.scrolled {
+            top: 10px;
+            height: 65px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .logo {
@@ -200,9 +209,11 @@
 
         /* --- Hero --- */
         .hero {
-            padding: 200px 0 120px;
-            background: radial-gradient(circle at top right, rgba(232, 122, 93, 0.08), transparent 40%),
-                radial-gradient(circle at bottom left, rgba(255, 107, 53, 0.05), transparent 40%);
+            padding: 180px 0 100px;
+            background:
+                radial-gradient(circle at 90% 10%, rgba(255, 107, 53, 0.1), transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(232, 122, 93, 0.08), transparent 40%),
+                var(--bg);
         }
 
         .hero-grid {
@@ -487,9 +498,14 @@
         }
 
         @media (max-width: 768px) {
+            .hero {
+                padding: 120px 0 60px;
+            }
+
             .hero h1 {
                 font-size: 42px;
                 letter-spacing: -1.5px;
+                line-height: 1.1;
             }
 
             .hero p {
@@ -497,7 +513,14 @@
             }
 
             .container {
+                padding: 0 25px;
+            }
+
+            header {
+                top: 15px;
+                width: calc(100% - 30px);
                 padding: 0 20px;
+                height: 65px;
             }
 
             .section-header h2 {
@@ -555,6 +578,69 @@
             </div>
             <div class="hero-visual reveal" style="animation-delay: 0.2s;">
                 <img src="assets/hero.png" alt="SaaS AR Hero" class="hero-main-img">
+                <div class="food-card reveal" style="animation-delay: 0.1s;">
+                    <div class="food-img-frame"><img src="assets/pizza.png" alt="Gourmet Pizza"></div>
+                    <div class="food-info">
+                        <h3>Artisan Pizza</h3>
+                        <p>Perfect crust, melting cheese, 3D precision.</p>
+                        <a href="viewer.html?model=pizzaSpecial" class="ar-link"><i data-lucide="box"></i> Launch AR
+                            Viewer</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.2s;">
+                    <div class="food-img-frame"><img src="assets/fries.png" alt="French Fries"></div>
+                    <div class="food-info">
+                        <h3>Crispy Fries</h3>
+                        <p>Golden perfection in every hyper-realistic pixel.</p>
+                        <a href="viewer.html?model=frenchFries" class="ar-link"><i data-lucide="box"></i> Launch AR
+                            Viewer</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.3s;">
+                    <div class="food-img-frame"><img src="assets/pasta.png" alt="Creamy Pasta"></div>
+                    <div class="food-info">
+                        <h3>Chicken Pasta</h3>
+                        <p>Elegant presentation meet spatial rendering.</p>
+                        <a href="viewer.html?model=pasta" class="ar-link"><i data-lucide="box"></i> Launch AR Viewer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works" style="padding: 100px 0; background: var(--white);">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>How It <span class="gradient-text">Works</span></h2>
+                <p>Three simple steps to revolutionize your dining table.</p>
+            </div>
+            <div class="step-grid"
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center;">
+                <div class="step-card reveal" style="animation-delay: 0.1s;">
+                    <div class="step-icon"
+                        style="width: 80px; height: 80px; background: rgba(255,107,53,0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <i data-lucide="qr-code" style="width: 40px; height: 40px;"></i>
+                    </div>
+                    <h3>Scan</h3>
+                    <p style="color: var(--text-muted);">Point your camera at the QR code on the menu.</p>
+                </div>
+                <div class="step-card reveal" style="animation-delay: 0.2s;">
+                    <div class="step-icon"
+                        style="width: 80px; height: 80px; background: rgba(255,107,53,0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <i data-lucide="smartphone" style="width: 40px; height: 40px;"></i>
+                    </div>
+                    <h3>View</h3>
+                    <p style="color: var(--text-muted);">The dish appears instantly in hyper-realistic 3D on your table.
+                    </p>
+                </div>
+                <div class="step-card reveal" style="animation-delay: 0.3s;">
+                    <div class="step-icon"
+                        style="width: 80px; height: 80px; background: rgba(255,107,53,0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <i data-lucide="shopping-cart" style="width: 40px; height: 40px;"></i>
+                    </div>
+                    <h3>Order</h3>
+                    <p style="color: var(--text-muted);">Confidently order with visual certainty of what's coming.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -571,7 +657,8 @@
                     <div class="food-info">
                         <h3>Luxe Burger</h3>
                         <p>A masterpiece of flavor and 3D precision.</p>
-                        <a href="viewer.html?model=chickenBurger" class="ar-link">Launch AR Viewer</a>
+                        <a href="viewer.html?model=chickenBurger" class="ar-link"><i data-lucide="box"></i> Launch AR
+                            Viewer</a>
                     </div>
                 </div>
                 <div class="food-card reveal" style="animation-delay: 0.2s;">
@@ -579,7 +666,8 @@
                     <div class="food-info">
                         <h3>Velvet Cake</h3>
                         <p>Indulgence meets digital craftsmanship.</p>
-                        <a href="viewer.html?model=strawberryCheesecake" class="ar-link">Launch AR Viewer</a>
+                        <a href="viewer.html?model=strawberryCheesecake" class="ar-link"><i data-lucide="box"></i>
+                            Launch AR Viewer</a>
                     </div>
                 </div>
                 <div class="food-card reveal" style="animation-delay: 0.3s;">
@@ -587,7 +675,7 @@
                     <div class="food-info">
                         <h3>Street Tacos</h3>
                         <p>Vibrant colors, authentic spatial feel.</p>
-                        <a href="viewer.html?model=taco" class="ar-link">Launch AR Viewer</a>
+                        <a href="viewer.html?model=taco" class="ar-link"><i data-lucide="box"></i> Launch AR Viewer</a>
                     </div>
                 </div>
             </div>
@@ -627,6 +715,9 @@
         </div>
     </footer>
     <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
 
