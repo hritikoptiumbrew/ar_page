@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Signature Menu Collection - AR with Annotations</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-dark: #050505;
+            --gold: #D4AF37;
+            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #AA8A28 100%);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        /* --- LIVE BACKGROUND --- */
+        @keyframes subtleDrift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(125deg, #050505, #111111, #080808);
+            background-size: 300% 300%;
+            animation: subtleDrift 20s ease infinite;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .wrap {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- VIEWER --- */
+        .viewer-container {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 25vh;
+        }
+
+        /* The 3D Model Viewer */
+        #dishModel {
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: scale(1);
+            will-change: transform, opacity;
+            --poster-color: transparent;
+        }
+
+        #dishModel.swapping-out {
+            opacity: 0 !important;
+            transform: scale(0.9) translateY(20px);
+        }
+
+        #dishModel.swapping-in {
+            opacity: 0 !important;
+            transform: scale(1.1) translateY(-20px);
+        }
+
+        #dishModel.hidden {
+            opacity: 0 !important;
+        }
+
+        /* Model Viewer Styling */
+        #dishModel::part(default-progress-bar) {
+            background: var(--gold);
+        }
+
+        #dishModel::part(default-progress-mask) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- AR HOTSPOT ANNOTATIONS --- */
+        .hotspot {
+            display: block;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hotspot:not([data-visible]) {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hotspot-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .hotspot-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .hotspot-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hotspot-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .hotspot-benefit {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        /* Hotspot dot indicator */
+        .hotspot::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--hotspot-color, #4ade80);
+            box-shadow: 0 0 10px var(--hotspot-color, #4ade80);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        /* Mobile Responsive for 3D Model */
+        @media (max-width: 600px) {
+            #dishModel {
+                max-width: 90%;
+                height: 400px;
+            }
+
+            .hotspot {
+                padding: 6px 10px;
+            }
+
+            .hotspot-name {
+                font-size: 10px;
+            }
+
+            .hotspot-benefit {
+                font-size: 8px;
+            }
+
+            .hotspot-icon {
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+            }
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .brand-tag {
+            font-size: 10px;
+            letter-spacing: 3px;
+            padding: 8px 20px 8px 23px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* --- INTERFACE --- */
+        .book-interface {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 48vh;
+            z-index: 10;
+            background: linear-gradient(to top, #000 10%, rgba(10, 10, 10, 0.95) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 40px;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 55%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-prev {
+            left: 20px;
+        }
+
+        .nav-next {
+            right: 20px;
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.2;
+            pointer-events: none;
+            border-color: transparent;
+        }
+
+        .page-content {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 60px;
+        }
+
+        /* Cascade Animation */
+        @keyframes smoothSettle {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-common {
+            opacity: 0;
+            animation: smoothSettle 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            will-change: transform, opacity;
+        }
+
+        .anim-title {
+            animation-delay: 0.1s;
+        }
+
+        .anim-diet {
+            animation-delay: 0.15s;
+        }
+
+        .anim-price {
+            animation-delay: 0.2s;
+        }
+
+        .anim-ing {
+            animation-delay: 0.25s;
+        }
+
+        .anim-btn {
+            animation-delay: 0.3s;
+        }
+
+        .dish-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 500;
+            margin: 0 0 5px 0;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .diet-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .veg {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.3);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .non-veg {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .price {
+            font-size: 20px;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .ingredients-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .ing-tag {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .btn-ar {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 45px;
+            width: 100%;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 50px;
+            color: #000;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-ar svg {
+            width: 18px;
+            height: 18px;
+            fill: #000;
+        }
+
+        .btn-ar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: premiumSheen 3.5s infinite ease-in-out;
+        }
+
+        @keyframes premiumSheen {
+            0% {
+                left: -150%;
+            }
+
+            50% {
+                left: 150%;
+            }
+
+            100% {
+                left: 150%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dish-title {
+                font-size: 28px;
+            }
+
+            .page-content {
+                padding: 0 50px;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .nav-prev {
+                left: 10px;
+            }
+
+            .nav-next {
+                right: 10px;
+            }
+        }
+
+        body.ar-active .book-interface,
+        body.ar-active .header {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+
+        <div class="header">
+            <div class="brand-tag">Signature Collection</div>
+        </div>
+
+        <div class="viewer-container">
+            <model-viewer id="dishModel" src="" alt="3D model of signature dish" camera-controls auto-rotate
+                auto-rotate-delay="0" rotation-per-second="20deg" environment-image="neutral" shadow-intensity="1"
+                exposure="1" camera-orbit="0deg 75deg 105%" min-camera-orbit="auto auto 80%"
+                max-camera-orbit="auto auto 120%" ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto"
+                interaction-prompt="none" loading="eager">
+
+                <!-- AR Hotspots will be dynamically added here -->
+
+            </model-viewer>
+        </div>
+
+        <div class="book-interface">
+            <button class="nav-btn nav-prev" id="btnPrev"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-btn nav-next" id="btnNext"><i class="fas fa-chevron-right"></i></button>
+            <div class="page-content" id="pageContent"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. ANALYTICS SETUP
+        // ==========================================
+        const GA_MEASUREMENT_ID = 'G-1Q36T0T22F';
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', GA_MEASUREMENT_ID);
+
+        // ==========================================
+        // 2. DATA WITH AR HOTSPOT POSITIONS
+        // ==========================================
+        const menuItems = [
+            {
+                id: 'pizza',
+                title: "Italian Supreme",
+                price: "$16.95",
+                type: "Veg",
+                model: "pizza.glb",
+                usdz: "pizza.usdz",
+                ingredients: [
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.2m 0.1m 0.15m", normal: "0 1 0" },
+                    { name: "Basil", color: "#4ade80", benefit: "Anti-inflammatory", position: "-0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Mozzarella", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Olives", color: "#a78bfa", benefit: "Healthy Fats", position: "0.1m 0.08m -0.15m", normal: "0 1 0" },
+                    { name: "Capsicum", color: "#4ade80", benefit: "Vitamin A", position: "-0.2m 0.1m -0.1m", normal: "0 1 0" }
+                ]
+            },
+            {
+                id: 'salad',
+                title: "Grilled Chicken Salad",
+                price: "$14.50",
+                type: "Non-Veg",
+                model: "salad.glb",
+                usdz: "salad.usdz",
+                ingredients: [
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Lycopene", position: "0.15m 0.1m 0.1m", normal: "0 1 0" },
+                    { name: "Avocado", color: "#a3e635", benefit: "Omega-3", position: "-0.2m 0.12m 0.05m", normal: "0 1 0" },
+                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Cucumber", color: "#86efac", benefit: "Hydration", position: "0.18m 0.08m -0.12m", normal: "0 1 0" },
+                    { name: "Red Onion", color: "#d8b4fe", benefit: "Antioxidants", position: "-0.15m 0.1m -0.15m", normal: "0 1 0" }
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        const dishModel = document.getElementById('dishModel');
+        const pageContent = document.getElementById('pageContent');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+
+        function createHotspots(item) {
+            // Clear existing hotspots
+            const existingHotspots = dishModel.querySelectorAll('.hotspot');
+            existingHotspots.forEach(h => h.remove());
+
+            // Create new hotspots for each ingredient
+            item.ingredients.forEach((ing, index) => {
+                const hotspot = document.createElement('button');
+                hotspot.className = 'hotspot';
+                hotspot.slot = `hotspot-${index + 1}`;
+                hotspot.setAttribute('data-position', ing.position);
+                hotspot.setAttribute('data-normal', ing.normal);
+                hotspot.style.setProperty('--hotspot-color', ing.color);
+
+                hotspot.innerHTML = `
+                    <div class="hotspot-content">
+                        <div class="hotspot-icon" style="background: ${ing.color};">
+                            <i class="fas fa-leaf" style="color: #000; font-size: 10px;"></i>
+                        </div>
+                        <div class="hotspot-text">
+                            <div class="hotspot-name">${ing.name}</div>
+                            <div class="hotspot-benefit">● ${ing.benefit}</div>
+                        </div>
+                    </div>
+                `;
+
+                dishModel.appendChild(hotspot);
+            });
+        }
+
+        function renderPage(index) {
+            const item = menuItems[index];
+
+            // Analytics: Track View
+            gtag('event', 'view_dish', {
+                'event_category': 'Menu',
+                'event_label': item.title
+            });
+
+            // Update 3D model
+            dishModel.src = item.model;
+            dishModel.setAttribute('ios-src', item.usdz);
+
+            // Create AR hotspots
+            createHotspots(item);
+
+            let ingHTML = '';
+            item.ingredients.forEach(ing => {
+                ingHTML += `<div class="ing-tag"><span class="dot" style="background: ${ing.color};"></span>${ing.name}</div>`;
+            });
+
+            const badgeClass = item.type === "Veg" ? "veg" : "non-veg";
+
+            const html = `
+            <div class="anim-common anim-title"><h1 class="dish-title">${item.title}</h1></div>
+            <div class="anim-common anim-diet"><span class="diet-badge ${badgeClass}">${item.type}</span></div>
+            <div class="anim-common anim-price"><span class="price">${item.price}</span></div>
+            <div class="anim-common anim-ing"><div class="ingredients-row">${ingHTML}</div></div>
+            <div class="anim-common anim-btn">
+                <button id="arBtn" class="btn-ar" onclick="activateAR()">
+                    <svg viewBox="0 0 24 24"><path d="M3 4c0-1.1.9-2 2-2h4V0H5C2.24 0 0 2.24 0 5v4h2V5zm0 10H0v4c0 2.76 2.24 5 5 5h4v-2H5c-1.1 0-2-.9-2-2v-3zm18-5V5c0-1.1-.9-2-2-2h-3V0h3c2.76 0 5 2.24 5 5v4h-2zm-2 10c1.1 0 2-.9 2-2v-3h2v3c0 2.76-2.24 5-5 5h-3v-2h3z"/></svg>
+                    <span>View on your table</span>
+                </button>
+            </div>
+        `;
+
+            pageContent.innerHTML = html;
+            btnPrev.classList.toggle('disabled', index === 0);
+            btnNext.classList.toggle('disabled', index === menuItems.length - 1);
+        }
+
+        async function turnPage(direction) {
+            if (isAnimating) return;
+            const newIndex = currentIndex + direction;
+            if (newIndex < 0 || newIndex >= menuItems.length) return;
+
+            isAnimating = true;
+
+            // Fade out current model
+            dishModel.classList.add('swapping-out');
+            pageContent.innerHTML = '';
+
+            await new Promise(r => setTimeout(r, 300));
+
+            dishModel.classList.add('hidden');
+            currentIndex = newIndex;
+
+            const item = menuItems[currentIndex];
+
+            // Update model
+            dishModel.src = item.model;
+            dishModel.setAttribute('ios-src', item.usdz);
+
+            // Render new page content
+            renderPage(currentIndex);
+
+            // Wait a bit for model to start loading
+            await new Promise(r => setTimeout(r, 100));
+
+            // Fade in new model
+            dishModel.classList.remove('swapping-out');
+            dishModel.classList.add('swapping-in');
+            dishModel.classList.remove('hidden');
+
+            await new Promise(r => setTimeout(r, 100));
+
+            dishModel.classList.remove('swapping-in');
+            isAnimating = false;
+        }
+
+        window.activateAR = () => {
+            // Analytics: Track AR Click
+            const item = menuItems[currentIndex];
+            gtag('event', 'start_ar', {
+                'event_category': 'Interaction',
+                'event_label': item.title
+            });
+            dishModel.activateAR();
+        };
+
+        btnPrev.addEventListener('click', () => turnPage(-1));
+        btnNext.addEventListener('click', () => turnPage(1));
+
+        dishModel.addEventListener('ar-status', (e) => {
+            if (e.detail.status === 'session-started' || e.detail.status === 'presenting') {
+                document.body.classList.add('ar-active');
+            } else {
+                document.body.classList.remove('ar-active');
+            }
+        });
+
+        // Initialize
+        renderPage(0);
+        dishModel.src = menuItems[0].model;
+        dishModel.setAttribute('ios-src', menuItems[0].usdz);
+
+    </script>
+</body>
+
+</html>
