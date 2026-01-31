@@ -552,7 +552,7 @@
         <nav class="nav-links">
             <a href="#gallery">Gallery</a>
             <a href="#features">Features</a>
-            <a href="menu.html" class="nav-cta">Go to Menu</a>
+            <a href="/menu" class="nav-cta">Go to Menu</a>
         </nav>
         <div class="mobile-menu-btn">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -572,12 +572,77 @@
                 <p>Increase sales by 25% and delight customers with hyper-realistic Augmented Reality previews of every
                     dish. Built for the modern SaaS-enabled restaurant.</p>
                 <div class="hero-ctas">
-                    <a href="menu.html" class="btn btn-main">Launch Live Menu</a>
+                    <a href="/menu" class="btn btn-main">Launch Live Menu</a>
                     <a href="#gallery" class="btn btn-outline">Explore Gallery</a>
                 </div>
             </div>
             <div class="hero-visual reveal" style="animation-delay: 0.2s;">
-                <img src="assets/hero.png" alt="SaaS AR Hero" class="hero-main-img">
+                <div class="video-container"
+                    style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); background: #000; border: 1px solid var(--border);">
+                    <video width="100%" height="auto" autoplay loop playsinline controls style="display: block;">
+                        <source src="assets/promo_video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Our Interactive <span class="gradient-text">Selection</span></h2>
+                <p>High-fidelity 3D assets optimized for instant delivery.</p>
+            </div>
+            <div class="gallery-wrap">
+                <div class="food-card reveal" style="animation-delay: 0.1s;">
+                    <div class="food-img-frame"><img src="assets/burger.png" alt="Burger" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Luxe Burger</h3>
+                        <p>A masterpiece of flavor and 3D precision.</p>
+                        <a href="/viewer?model=chickenBurger" class="ar-link"><i data-lucide="box"></i> AR View</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.2s;">
+                    <div class="food-img-frame"><img src="assets/cake.png" alt="Cheesecake" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Velvet Cake</h3>
+                        <p>Indulgence meets digital craftsmanship.</p>
+                        <a href="/viewer?model=strawberryCheesecake" class="ar-link"><i data-lucide="box"></i> AR
+                            View</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.3s;">
+                    <div class="food-img-frame"><img src="assets/taco.png" alt="Taco" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Street Tacos</h3>
+                        <p>Vibrant colors, authentic spatial feel.</p>
+                        <a href="/viewer?model=taco" class="ar-link"><i data-lucide="box"></i> AR View</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.4s;">
+                    <div class="food-img-frame"><img src="assets/pizza.png" alt="Artisan Pizza" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Artisan Pizza</h3>
+                        <p>Perfect crust, melting cheese, 3D precision.</p>
+                        <a href="/viewer?model=pizzaSpecial" class="ar-link"><i data-lucide="box"></i> AR View</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.5s;">
+                    <div class="food-img-frame"><img src="assets/fries.png" alt="Crispy Fries" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Crispy Fries</h3>
+                        <p>Golden perfection in every hyper-realistic pixel.</p>
+                        <a href="/viewer?model=frenchFries" class="ar-link"><i data-lucide="box"></i> AR View</a>
+                    </div>
+                </div>
+                <div class="food-card reveal" style="animation-delay: 0.6s;">
+                    <div class="food-img-frame"><img src="assets/pasta.png" alt="Chicken Pasta" loading="lazy"></div>
+                    <div class="food-info">
+                        <h3>Chicken Pasta</h3>
+                        <p>Elegant presentation meet spatial rendering.</p>
+                        <a href="/viewer?model=pasta" class="ar-link"><i data-lucide="box"></i> AR View</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -614,83 +679,6 @@
                     </div>
                     <h3>Order</h3>
                     <p style="color: var(--text-muted);">Confidently order with visual certainty of what's coming.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="demo" class="demo-section" style="padding: 100px 0; background: #111111; color: white;">
-        <div class="container">
-            <div class="section-header reveal" style="text-align: center; margin-bottom: 60px;">
-                <h2 style="color: white;">Experience the <span class="gradient-text">Magic</span></h2>
-                <p style="color: rgba(255,255,255,0.5);">See how MenuXR brings the menu to life right before your eyes.
-                </p>
-            </div>
-            <div class="video-container reveal"
-                style="max-width: 900px; margin: 0 auto; border-radius: 40px; overflow: hidden; box-shadow: 0 40px 100px rgba(255, 107, 53, 0.2); border: 1px solid rgba(255,255,255,0.1); background: #000;">
-                <video width="100%" height="auto" autoplay muted loop playsinline style="display: block;">
-                    <source src="assets/promo_video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </div>
-    </section>
-
-    <section id="gallery" class="gallery-section">
-        <div class="container">
-            <div class="section-header reveal">
-                <h2>Our Interactive <span class="gradient-text">Selection</span></h2>
-                <p>High-fidelity 3D assets optimized for instant delivery.</p>
-            </div>
-            <div class="gallery-wrap">
-                <div class="food-card reveal" style="animation-delay: 0.1s;">
-                    <div class="food-img-frame"><img src="assets/burger.png" alt="Burger"></div>
-                    <div class="food-info">
-                        <h3>Luxe Burger</h3>
-                        <p>A masterpiece of flavor and 3D precision.</p>
-                        <a href="viewer.html?model=chickenBurger" class="ar-link"><i data-lucide="box"></i> AR View</a>
-                    </div>
-                </div>
-                <div class="food-card reveal" style="animation-delay: 0.2s;">
-                    <div class="food-img-frame"><img src="assets/cake.png" alt="Cheesecake"></div>
-                    <div class="food-info">
-                        <h3>Velvet Cake</h3>
-                        <p>Indulgence meets digital craftsmanship.</p>
-                        <a href="viewer.html?model=strawberryCheesecake" class="ar-link"><i data-lucide="box"></i> AR
-                            View</a>
-                    </div>
-                </div>
-                <div class="food-card reveal" style="animation-delay: 0.3s;">
-                    <div class="food-img-frame"><img src="assets/taco.png" alt="Taco"></div>
-                    <div class="food-info">
-                        <h3>Street Tacos</h3>
-                        <p>Vibrant colors, authentic spatial feel.</p>
-                        <a href="viewer.html?model=taco" class="ar-link"><i data-lucide="box"></i> AR View</a>
-                    </div>
-                </div>
-                <div class="food-card reveal" style="animation-delay: 0.4s;">
-                    <div class="food-img-frame"><img src="assets/pizza.png" alt="Artisan Pizza"></div>
-                    <div class="food-info">
-                        <h3>Artisan Pizza</h3>
-                        <p>Perfect crust, melting cheese, 3D precision.</p>
-                        <a href="viewer.html?model=pizzaSpecial" class="ar-link"><i data-lucide="box"></i> AR View</a>
-                    </div>
-                </div>
-                <div class="food-card reveal" style="animation-delay: 0.5s;">
-                    <div class="food-img-frame"><img src="assets/fries.png" alt="Crispy Fries"></div>
-                    <div class="food-info">
-                        <h3>Crispy Fries</h3>
-                        <p>Golden perfection in every hyper-realistic pixel.</p>
-                        <a href="viewer.html?model=frenchFries" class="ar-link"><i data-lucide="box"></i> AR View</a>
-                    </div>
-                </div>
-                <div class="food-card reveal" style="animation-delay: 0.6s;">
-                    <div class="food-img-frame"><img src="assets/pasta.png" alt="Chicken Pasta"></div>
-                    <div class="food-info">
-                        <h3>Chicken Pasta</h3>
-                        <p>Elegant presentation meet spatial rendering.</p>
-                        <a href="viewer.html?model=pasta" class="ar-link"><i data-lucide="box"></i> AR View</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -770,17 +758,26 @@
             </div>
             <div class="feat-grid">
                 <div class="feat-card reveal" style="animation-delay: 0.1s;">
-                    <i></i>
+                    <div
+                        style="width: 50px; height: 50px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                        <i data-lucide="zap" style="color: white; width: 24px; height: 24px;"></i>
+                    </div>
                     <h3>Draco Optimized</h3>
                     <p>Proprietary compression that delivers 20MB models in under 1.5MB for lag-free mobile viewing.</p>
                 </div>
                 <div class="feat-card reveal" style="animation-delay: 0.2s;">
-                    <i></i>
+                    <div
+                        style="width: 50px; height: 50px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                        <i data-lucide="smartphone" style="color: white; width: 24px; height: 24px;"></i>
+                    </div>
                     <h3>Native iOS/Android</h3>
                     <p>One-click AR integration that utilizes native QuickLook and WebXR for the best performance.</p>
                 </div>
                 <div class="feat-card reveal" style="animation-delay: 0.3s;">
-                    <i></i>
+                    <div
+                        style="width: 50px; height: 50px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                        <i data-lucide="trending-up" style="color: white; width: 24px; height: 24px;"></i>
+                    </div>
                     <h3>Conversion Driven</h3>
                     <p>Designed to reduce order hesitation and build trust through visual certainty.</p>
                 </div>

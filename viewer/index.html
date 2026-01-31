@@ -135,8 +135,8 @@
 
       // Otherwise, treat as model name and generate relative paths in the project
       return {
-        src: `models/${modelName}.glb`,
-        iosSrc: `models/${modelName}.usdz`
+        src: `/models/${modelName}.glb`,
+        iosSrc: `/models/${modelName}.usdz`
       };
     }
 
@@ -172,7 +172,7 @@
         // Determine USDZ path to check
         let usdzPath = modelPaths.iosSrc;
         if (iosModelName) {
-          usdzPath = iosModelName.includes('.') ? iosModelName : `models/${iosModelName}.usdz`;
+          usdzPath = iosModelName.includes('.') ? iosModelName : `/models/${iosModelName}.usdz`;
         }
         const usdzExists = await checkFileExists(usdzPath);
 
@@ -203,7 +203,7 @@
           }
         } else {
           // If iosModelName doesn't have an extension, generate path with .usdz extension
-          viewer.setAttribute('ios-src', `models/${iosModelName}.usdz`);
+          viewer.setAttribute('ios-src', `/models/${iosModelName}.usdz`);
         }
       } else {
         // Use generated iOS model path
