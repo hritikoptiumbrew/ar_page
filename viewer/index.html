@@ -9,91 +9,162 @@
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
+    :root {
+      --primary: #FF6B35;
+      --primary-glow: rgba(255, 107, 53, 0.4);
+      --accent: #E87A5D;
+      --bg-dark: #050505;
+      --text-main: #FFFFFF;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
     body {
       margin: 0;
-      background: #fff;
+      background: linear-gradient(125deg, #050505, #111111, #080808);
+      background-size: 300% 300%;
+      animation: subtleDrift 20s ease infinite;
+      font-family: 'Montserrat', sans-serif;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       height: 100vh;
+      color: var(--text-main);
     }
 
-    /* Model Takes ~70% of Screen */
+    @keyframes subtleDrift {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: white;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo span {
+      color: var(--primary);
+    }
+
     #viewer-box {
-      flex: 0 0 70%;
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
-    }
-
-
-    #viewer-box {
-      display: block;
-      justify-content: center;
-      align-items: center;
-      width: 100vw;
-      height: 90vh;
+      height: 100%;
     }
 
     model-viewer {
       width: 100%;
       height: 100%;
-      background: #fff;
+      --poster-color: transparent;
     }
 
-    /* AR Button Area (~20% of screen) */
-    #button-area {
-      flex: 0 0 20%;
+    #ar-button-container {
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      width: 100%;
       display: flex;
       justify-content: center;
-      align-items: center;
+      z-index: 100;
     }
 
     #ar-button {
-      background: black;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: white;
       border: none;
-      padding: 14px 22px;
-      font-size: 18px;
-      border-radius: 8px;
+      padding: 20px 48px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 50px;
       cursor: pointer;
-      width: 70%;
-      max-width: 260px;
-      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s ease;
     }
 
-    /* Bottom Spacing (~10%) */
-    #bottom-space {
-      flex: 0 0 10%;
-    }
-
-    #error-message {
-      color: red;
-      text-align: center;
-      padding: 10px;
-      display: none;
+    #ar-button:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5);
     }
 
     #warning-banner {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #ffcc00;
-      color: #333;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 68, 68, 0.1);
+      color: #ff4444;
       text-align: center;
-      padding: 10px;
-      font-weight: bold;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
       z-index: 1000;
       display: none;
-      font-family: sans-serif;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+      backdrop-filter: blur(10px);
+      max-width: 90%;
     }
   </style>
 </head>
 
 <body>
+
+  <header class="header">
+    <a href="javascript:history.back()" class="back-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <a href="/" class="brand-logo">Menu<span>XR</span></a>
+    <div style="width: 45px;"></div>
+  </header>
 
   <div id="warning-banner"></div>
 
@@ -103,13 +174,16 @@
     </model-viewer>
   </div>
 
-  <div id="error-message"></div>
-
-  <!-- <div id="button-area">
-  <button id="ar-button">View in your space</button>
-</div>
-
-<div id="bottom-space"></div> -->
+  <div id="ar-button-container">
+    <button id="ar-button" onclick="document.querySelector('#viewer').activateAR()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5"></path>
+        <path d="M19 19v-4a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v4"></path>
+      </svg>
+      View on your table
+    </button>
+  </div>
 
   <script>
     // Function to get URL parameter by name

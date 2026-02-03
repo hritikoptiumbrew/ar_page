@@ -237,23 +237,42 @@
             width: 100%;
             padding: 30px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             z-index: 10;
-            pointer-events: none;
         }
 
-        .brand-tag {
-            font-size: 10px;
-            letter-spacing: 3px;
-            padding: 8px 20px 8px 23px;
-            text-transform: uppercase;
-            color: var(--primary);
-            font-weight: 700;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 50px;
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .brand-logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo span {
+            color: var(--primary);
         }
 
         /* --- INTERFACE --- */
@@ -442,36 +461,24 @@
 
         .btn-ar {
             pointer-events: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 18px 45px;
-            width: 100%;
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
             border: none;
+            padding: 20px 48px;
             border-radius: 50px;
-            color: #fff;
-            font-size: 14px;
+            font-family: inherit;
             font-weight: 700;
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
-            box-shadow: 0 0 30px var(--primary-glow);
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
             position: relative;
             overflow: hidden;
-        }
-
-        .btn-ar:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px var(--primary-glow);
-        }
-
-        .btn-ar svg {
-            width: 18px;
-            height: 18px;
-            fill: #fff;
         }
 
         .btn-ar::after {
@@ -539,7 +546,9 @@
     <div class="wrap">
 
         <div class="header">
-            <div class="brand-tag">MenuXR Collection</div>
+            <a href="../" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <a href="../" class="brand-logo">Menu<span>XR</span></a>
+            <div style="width: 45px;"></div> <!-- Spacer for flex balance -->
         </div>
 
         <div class="viewer-container">
@@ -584,7 +593,7 @@
                 title: "Fresh Garden Salad",
                 price: "$9.95",
                 type: "Veg",
-                image: "salad.png",
+                image: "../assets/salad.png",
                 model: "salad.glb",
                 usdz: "salad.usdz",
                 category: "Salads",
@@ -603,7 +612,7 @@
                 title: "Deluxe Veggie Pizza",
                 price: "$17.95",
                 type: "Veg",
-                image: "pizzaDeluxe.png",
+                image: "../assets/pizzaDeluxe.png",
                 model: "pizzaDeluxe.glb",
                 usdz: "pizzaDeluxe.usdz",
                 category: "Main Course",
@@ -622,6 +631,7 @@
                 title: "Classic Chicken Burger",
                 price: "$12.95",
                 type: "Non-Veg",
+                image: "../assets/chickenBurger.png",
                 model: "chickenBurger.glb",
                 usdz: "chickenBurger.usdz",
                 category: "Fast Food",
@@ -639,6 +649,7 @@
                 title: "Grilled Salmon",
                 price: "$18.95",
                 type: "Non-Veg",
+                image: "../assets/grilledSalmon.png",
                 model: "grilledFish.glb",
                 usdz: "grilledFish.usdz",
                 category: "Seafood",
@@ -656,6 +667,7 @@
                 title: "Classic Hot Dog",
                 price: "$7.95",
                 type: "Non-Veg",
+                image: "../assets/hotDog.png",
                 model: "hotDog.glb",
                 usdz: "hotDog.usdz",
                 category: "Fast Food",
@@ -673,6 +685,7 @@
                 title: "Strawberry Cheesecake",
                 price: "$8.95",
                 type: "Veg",
+                image: "../assets/strawberryCheesecake.png",
                 model: "strawberryCheesecake.glb",
                 usdz: "strawberryCheesecake.usdz",
                 category: "Dessert",
@@ -690,6 +703,7 @@
                 title: "Chocolate Milkshake",
                 price: "$6.95",
                 type: "Veg",
+                image: "../assets/milkshake.png",
                 model: "milkshake.glb",
                 usdz: "milkshake.usdz",
                 category: "Beverage",
@@ -858,11 +872,22 @@
             }
         });
 
-        // Initialize
-        renderPage(0);
-        dishModel.src = menuItems[0].model;
-        dishModel.setAttribute('ios-src', menuItems[0].usdz);
+        // Initialize with Deep Linking Support
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemId = urlParams.get('id');
+        let initialIndex = 0;
 
+        if (itemId) {
+            const foundIndex = menuItems.findIndex(item => item.id === itemId);
+            if (foundIndex !== -1) {
+                initialIndex = foundIndex;
+                currentIndex = foundIndex;
+            }
+        }
+
+        renderPage(initialIndex);
+        dishModel.src = menuItems[initialIndex].model;
+        dishModel.setAttribute('ios-src', menuItems[initialIndex].usdz);
     </script>
 </body>
 
