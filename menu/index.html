@@ -578,20 +578,41 @@
         // 2. COMPLETE MENU DATA - ALL ITEMS
         // ==========================================
         const menuItems = [
+            // SALADS
+            {
+                id: 'salad',
+                title: "Fresh Garden Salad",
+                price: "$9.95",
+                type: "Veg",
+                image: "salad.png",
+                model: "salad.glb",
+                usdz: "salad.usdz",
+                category: "Salads",
+                ingredients: [
+                    { name: "Lettuce", color: "#4ade80", benefit: "Fiber", position: "0m 0.1m 0m", normal: "0 1 0" },
+                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Cucumber", color: "#86efac", benefit: "Hydration", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
+                    { name: "Carrot", color: "#fdba74", benefit: "Vitamin A", position: "0.1m 0.08m -0.12m", normal: "0 1 0" },
+                    { name: "Olive Oil", color: "#fef3c7", benefit: "Healthy Fats", position: "0m 0.15m 0m", normal: "0 1 0" }
+                ]
+            },
+
             // PIZZAS
             {
-                id: 'pizzaSpecial',
-                title: "Chef's Special Pizza",
-                price: "$19.95",
-                type: "Non-Veg",
-                model: "pizzaSpecial.glb",
-                usdz: "pizzaSpecial.usdz",
+                id: 'pizzaDeluxe',
+                title: "Deluxe Veggie Pizza",
+                price: "$17.95",
+                type: "Veg",
+                image: "pizzaDeluxe.png",
+                model: "pizzaDeluxe.glb",
+                usdz: "pizzaDeluxe.usdz",
                 category: "Main Course",
                 ingredients: [
-                    { name: "Pepperoni", color: "#ff6b6b", benefit: "Protein", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0m", normal: "0 1 0" },
-                    { name: "Mushroom", color: "#d4a574", benefit: "Vitamin D", position: "-0.15m 0.1m 0.12m", normal: "0 1 0" },
-                    { name: "Onion", color: "#d8b4fe", benefit: "Antioxidants", position: "0.12m 0.08m -0.12m", normal: "0 1 0" }
+                    { name: "Bell Peppers", color: "#ff6b6b", benefit: "Vitamin C", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
+                    { name: "Olives", color: "#a78bfa", benefit: "Healthy Fats", position: "0m 0.15m 0m", normal: "0 1 0" },
+                    { name: "Mushrooms", color: "#d4a574", benefit: "Vitamin D", position: "-0.15m 0.1m 0.12m", normal: "0 1 0" },
+                    { name: "Onions", color: "#d8b4fe", benefit: "Antioxidants", position: "0.12m 0.08m -0.12m", normal: "0 1 0" },
+                    { name: "Artichokes", color: "#4ade80", benefit: "Fiber", position: "-0.12m 0.12m -0.1m", normal: "0 1 0" }
                 ]
             },
 
@@ -609,118 +630,6 @@
                     { name: "Lettuce", color: "#4ade80", benefit: "Fiber", position: "0.12m 0.15m 0.08m", normal: "0 1 0" },
                     { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "-0.12m 0.12m 0.08m", normal: "0 1 0" },
                     { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.1m 0.15m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'vegBurger',
-                title: "Garden Veggie Burger",
-                price: "$10.95",
-                type: "Veg",
-                model: "vegBurger.glb",
-                usdz: "vegBurger.usdz",
-                category: "Fast Food",
-                ingredients: [
-                    { name: "Veggie Patty", color: "#4ade80", benefit: "Plant Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
-                    { name: "Lettuce", color: "#86efac", benefit: "Fiber", position: "0.12m 0.15m 0.08m", normal: "0 1 0" },
-                    { name: "Tomato", color: "#ff6b6b", benefit: "Lycopene", position: "-0.12m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Avocado", color: "#a3e635", benefit: "Omega-3", position: "0m 0.12m 0.15m", normal: "0 1 0" }
-                ]
-            },
-
-            // INDIAN CUISINE
-            {
-                id: 'dosa',
-                title: "Crispy Masala Dosa",
-                price: "$11.95",
-                type: "Veg",
-                model: "dosa.glb",
-                usdz: "dosa.usdz",
-                category: "Indian",
-                ingredients: [
-                    { name: "Rice Batter", color: "#fef3c7", benefit: "Carbs", position: "0m 0.08m 0m", normal: "0 1 0" },
-                    { name: "Potato", color: "#fdba74", benefit: "Potassium", position: "0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Spices", color: "#ff6b6b", benefit: "Metabolism", position: "-0.15m 0.08m 0.1m", normal: "0 1 0" },
-                    { name: "Curry Leaves", color: "#4ade80", benefit: "Antioxidants", position: "0m 0.12m 0.15m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'chanaMasala',
-                title: "Chana Masala",
-                price: "$13.95",
-                type: "Veg",
-                model: "chanaMasala.glb",
-                usdz: "chanaMasala.usdz",
-                category: "Indian",
-                ingredients: [
-                    { name: "Chickpeas", color: "#fdba74", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Onion", color: "#d8b4fe", benefit: "Flavor", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Spices", color: "#ff6b6b", benefit: "Anti-inflammatory", position: "0m 0.15m 0.15m", normal: "0 1 0" }
-                ]
-            },
-
-            // PASTA & ITALIAN
-            {
-                id: 'lasagna',
-                title: "Classic Lasagna",
-                price: "$16.95",
-                type: "Non-Veg",
-                model: "lasagna.glb",
-                usdz: "lasagna.usdz",
-                category: "Italian",
-                ingredients: [
-                    { name: "Pasta Sheets", color: "#fef3c7", benefit: "Carbs", position: "0m 0.12m 0m", normal: "0 1 0" },
-                    { name: "Beef", color: "#8b4513", benefit: "Protein", position: "0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "-0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Tomato Sauce", color: "#ff6b6b", benefit: "Lycopene", position: "0m 0.08m 0.15m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'pastaDish',
-                title: "Penne Arrabbiata",
-                price: "$14.95",
-                type: "Veg",
-                model: "pastaDish.glb",
-                usdz: "pastaDish.usdz",
-                category: "Italian",
-                ingredients: [
-                    { name: "Penne Pasta", color: "#fef3c7", benefit: "Energy", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Garlic", color: "#fef3c7", benefit: "Immunity", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Chili", color: "#ff6b6b", benefit: "Spicy Kick", position: "0m 0.15m 0.12m", normal: "0 1 0" }
-                ]
-            },
-
-            // RICE DISHES
-            {
-                id: 'riceDish',
-                title: "Vegetable Fried Rice",
-                price: "$12.95",
-                type: "Veg",
-                model: "riceDish.glb",
-                usdz: "riceDish.usdz",
-                category: "Asian",
-                ingredients: [
-                    { name: "Rice", color: "#fef3c7", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Vegetables", color: "#4ade80", benefit: "Vitamins", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Soy Sauce", color: "#8b4513", benefit: "Flavor", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Egg", color: "#fbbf24", benefit: "Protein", position: "0m 0.15m 0.12m", normal: "0 1 0" }
-                ]
-            },
-
-            // ASIAN CUISINE
-            {
-                id: 'dumplings',
-                title: "Pan-Fried Dumplings",
-                price: "$13.95",
-                type: "Non-Veg",
-                model: "dumplings.glb",
-                usdz: "dumplings.usdz",
-                category: "Asian",
-                ingredients: [
-                    { name: "Pork", color: "#fdba74", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
-                    { name: "Chives", color: "#4ade80", benefit: "Vitamin K", position: "0.1m 0.1m 0.08m", normal: "0 1 0" },
-                    { name: "Ginger", color: "#fdba74", benefit: "Digestion", position: "-0.1m 0.08m 0.08m", normal: "0 1 0" }
                 ]
             },
 
@@ -741,87 +650,7 @@
                 ]
             },
 
-            // WRAPS
-            {
-                id: 'tandooriWrap',
-                title: "Tandoori Chicken Wrap",
-                price: "$14.95",
-                type: "Non-Veg",
-                model: "tandooriWrap.glb",
-                usdz: "tandooriWrap.usdz",
-                category: "Indian",
-                ingredients: [
-                    { name: "Chicken", color: "#ff6b6b", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Yogurt", color: "#ffffff", benefit: "Probiotics", position: "0.15m 0.12m 0.1m", normal: "0 1 0" },
-                    { name: "Spices", color: "#ff6b6b", benefit: "Flavor", position: "-0.15m 0.1m 0.1m", normal: "0 1 0" },
-                    { name: "Naan", color: "#fef3c7", benefit: "Carbs", position: "0m 0.15m 0m", normal: "0 1 0" }
-                ]
-            },
-
-            // SIDES
-            {
-                id: 'friedChicken',
-                title: "Crispy Fried Chicken",
-                price: "$13.95",
-                type: "Non-Veg",
-                model: "friedChicken.glb",
-                usdz: "friedChicken.usdz",
-                category: "Sides",
-                ingredients: [
-                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Spices", color: "#ff6b6b", benefit: "Flavor", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Coating", color: "#fef3c7", benefit: "Crunch", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'garlicBread',
-                title: "Garlic Bread",
-                price: "$6.95",
-                type: "Veg",
-                model: "garlicBread.glb",
-                usdz: "garlicBread.glb",
-                category: "Sides",
-                ingredients: [
-                    { name: "Bread", color: "#d4a574", benefit: "Carbs", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Garlic", color: "#fef3c7", benefit: "Immunity", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Butter", color: "#fef3c7", benefit: "Flavor", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" },
-                    { name: "Herbs", color: "#4ade80", benefit: "Aroma", position: "0m 0.15m 0.1m", normal: "0 1 0" }
-                ]
-            },
-
-            // MEXICAN
-            {
-                id: 'taco',
-                title: "Mexican Street Taco",
-                price: "$11.95",
-                type: "Non-Veg",
-                model: "taco.glb",
-                usdz: "taco.usdz",
-                category: "Mexican",
-                ingredients: [
-                    { name: "Beef", color: "#8b4513", benefit: "Protein", position: "0m 0.08m 0m", normal: "0 1 0" },
-                    { name: "Lettuce", color: "#4ade80", benefit: "Fiber", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Tomato", color: "#ff6b6b", benefit: "Vitamin C", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" },
-                    { name: "Cheese", color: "#fef3c7", benefit: "Calcium", position: "0m 0.15m 0.1m", normal: "0 1 0" }
-                ]
-            },
-
             // SANDWICHES
-            {
-                id: 'friedChickenSandwich',
-                title: "Fried Chicken Sandwich",
-                price: "$12.95",
-                type: "Non-Veg",
-                model: "friedChickenSandwich.glb",
-                usdz: "friedChickenSandwich.usdz",
-                category: "Fast Food",
-                ingredients: [
-                    { name: "Chicken", color: "#fdba74", benefit: "Protein", position: "0m 0.1m 0m", normal: "0 1 0" },
-                    { name: "Pickles", color: "#86efac", benefit: "Probiotics", position: "0.12m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Mayo", color: "#fef3c7", benefit: "Flavor", position: "-0.12m 0.1m 0.08m", normal: "0 1 0" },
-                    { name: "Bun", color: "#d4a574", benefit: "Carbs", position: "0m 0.15m 0m", normal: "0 1 0" }
-                ]
-            },
             {
                 id: 'hotDog',
                 title: "Classic Hot Dog",
@@ -854,21 +683,6 @@
                     { name: "Sugar", color: "#ffffff", benefit: "Energy", position: "-0.1m 0.12m 0.08m", normal: "0 1 0" }
                 ]
             },
-            {
-                id: 'dessertCake',
-                title: "Chocolate Fudge Cake",
-                price: "$9.95",
-                type: "Veg",
-                model: "dessertCake.glb",
-                usdz: "dessertCake.usdz",
-                category: "Dessert",
-                ingredients: [
-                    { name: "Chocolate", color: "#8b4513", benefit: "Antioxidants", position: "0m 0.12m 0m", normal: "0 1 0" },
-                    { name: "Cream", color: "#fef3c7", benefit: "Indulgence", position: "0.1m 0.15m 0.08m", normal: "0 1 0" },
-                    { name: "Cocoa", color: "#8b4513", benefit: "Mood Boost", position: "-0.1m 0.12m 0.08m", normal: "0 1 0" },
-                    { name: "Sugar", color: "#ffffff", benefit: "Energy", position: "0m 0.18m 0m", normal: "0 1 0" }
-                ]
-            },
 
             // BEVERAGES
             {
@@ -884,21 +698,6 @@
                     { name: "Chocolate", color: "#8b4513", benefit: "Antioxidants", position: "0m 0.12m 0m", normal: "0 1 0" },
                     { name: "Ice Cream", color: "#fef3c7", benefit: "Creamy", position: "0m 0.18m 0m", normal: "0 1 0" },
                     { name: "Whipped Cream", color: "#ffffff", benefit: "Indulgence", position: "0m 0.2m 0m", normal: "0 1 0" }
-                ]
-            },
-            {
-                id: 'croissantCoffee',
-                title: "Croissant & Coffee",
-                price: "$9.95",
-                type: "Veg",
-                model: "croissantCoffee.glb",
-                usdz: "croissantCoffee.usdz",
-                category: "Breakfast",
-                ingredients: [
-                    { name: "Croissant", color: "#d4a574", benefit: "Carbs", position: "0.1m 0.08m 0m", normal: "0 1 0" },
-                    { name: "Butter", color: "#fef3c7", benefit: "Flavor", position: "0.12m 0.1m 0.05m", normal: "0 1 0" },
-                    { name: "Coffee", color: "#8b4513", benefit: "Energy", position: "-0.1m 0.12m 0m", normal: "0 1 0" },
-                    { name: "Milk", color: "#ffffff", benefit: "Calcium", position: "-0.12m 0.15m 0m", normal: "0 1 0" }
                 ]
             }
         ];
@@ -947,10 +746,34 @@
                 'event_label': item.title
             });
 
-            dishModel.src = item.model;
-            dishModel.setAttribute('ios-src', item.usdz);
+            // Check if item has an image property
+            if (item.image) {
+                // Hide model-viewer and show image
+                dishModel.style.display = 'none';
 
-            createHotspots(item);
+                // Create or update image element
+                let dishImage = document.getElementById('dishImage');
+                if (!dishImage) {
+                    dishImage = document.createElement('img');
+                    dishImage.id = 'dishImage';
+                    dishImage.style.cssText = 'width: 100%; max-width: 600px; height: 500px; object-fit: contain; filter: drop-shadow(0 30px 50px rgba(255, 107, 53, 0.3));';
+                    dishModel.parentElement.appendChild(dishImage);
+                }
+                dishImage.src = item.image;
+                dishImage.alt = item.title;
+                dishImage.style.display = 'block';
+            } else {
+                // Show model-viewer and hide image
+                dishModel.style.display = 'block';
+                const dishImage = document.getElementById('dishImage');
+                if (dishImage) {
+                    dishImage.style.display = 'none';
+                }
+
+                dishModel.src = item.model;
+                dishModel.setAttribute('ios-src', item.usdz);
+                createHotspots(item);
+            }
 
             let ingHTML = '';
             item.ingredients.forEach(ing => {
