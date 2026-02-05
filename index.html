@@ -222,13 +222,16 @@
             top: 80px;
             left: 0;
             width: 100%;
-            background: var(--white);
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             flex-direction: column;
             padding: 30px;
             gap: 20px;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
+            align-items: center;
         }
 
         .nav-links.active a {
