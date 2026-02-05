@@ -481,6 +481,12 @@
             overflow: hidden;
         }
 
+        .btn-ar svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
         .btn-ar::after {
             content: '';
             position: absolute;
@@ -760,8 +766,8 @@
                 'event_label': item.title
             });
 
-            // Check if item has an image property
-            if (item.image) {
+            // Check if item has an image property and is one of the first two items
+            if (item.image && index < 2) {
                 // Hide model-viewer and show image
                 dishModel.style.display = 'none';
 
