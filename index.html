@@ -132,9 +132,7 @@
             }
         }
 
-        .reveal {
-            animation: reveal 1s cubic-bezier(0.23, 1, 0.32, 1) both;
-        }
+
 
         /* --- Header --- */
         header {
@@ -175,8 +173,9 @@
             color: var(--primary);
         }
 
-        nav.nav-links {
+        .nav-links {
             display: flex;
+            gap: 0;
             align-items: center;
         }
 
@@ -570,14 +569,6 @@
                 padding: 0 24px;
             }
 
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
             .section-header h2 {
                 font-size: 40px;
             }
@@ -618,6 +609,14 @@
                 flex-direction: column;
                 gap: 12px;
                 max-width: 100%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
             }
 
             .btn {
