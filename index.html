@@ -157,9 +157,10 @@
         header.scrolled {
             top: 10px;
             height: 60px;
-            background: rgba(5, 5, 5, 0.8);
+            background: rgba(5, 5, 5, 0.9);
             backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logo {
@@ -1310,67 +1311,20 @@
         <div class="container">
             <div class="section-header reveal">
                 <h2>Our <span style="color: var(--primary);">Effective</span> Plans</h2>
-                <p style="color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto;">Choose the perfect plan
-                    for
+                <p style="color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto;">Choose the perfect plan for
                     your restaurant. Scale as you grow.</p>
             </div>
 
             <div class="pricing-grid"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 60px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 60px; max-width: 1200px; margin-left: auto; margin-right: auto;">
 
-                <!-- Startup Plan -->
+                <!-- Professional Plan -->
                 <div class="pricing-card reveal"
                     style="background: rgba(255,255,255,0.03); border-radius: 32px; padding: 40px 30px; position: relative; border: 1px solid var(--border); backdrop-filter: blur(20px); transition: all 0.3s ease; animation-delay: 0.1s;">
-                    <div
-                        style="position: absolute; top: 20px; right: 20px; background: rgba(255, 107, 53, 0.2); color: var(--primary); padding: 8px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                        Save 20%</div>
-                    <h3 style="font-size: 28px; margin-bottom: 10px; color: white;">Startup</h3>
+                    <h3 style="font-size: 28px; margin-bottom: 10px; color: white;">Professional</h3>
                     <div style="margin-bottom: 30px;">
-                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$299</span>
-                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> USD</span>
-                    </div>
-
-                    <div style="margin-bottom: 30px;">
-                        <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <div
-                                style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Dishes Included</div>
-                            <div style="color: white; font-weight: 600;">Up to 3</div>
-                        </div>
-                        <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <div
-                                style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Duration</div>
-                            <div style="color: white; font-weight: 600;">6 Months</div>
-                        </div>
-                        <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <div
-                                style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Dish Updates</div>
-                            <div style="color: white; font-weight: 600;">Basic</div>
-                        </div>
-                    </div>
-
-                    <div
-                        style="margin-bottom: 25px; padding: 15px; background: rgba(255,107,53,0.1); border-radius: 12px; text-align: center; border: 1px solid rgba(255,107,53,0.2);">
-                        <div style="color: var(--primary); font-weight: 700;">$150 USD Renewal</div>
-                    </div>
-
-                    <a href="menu/" class="btn-main"
-                        style="display: block; width: 100%; text-align: center; padding: 18px; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">
-                        Get Started</a>
-                </div>
-
-                <!-- Regular Plan -->
-                <div class="pricing-card reveal"
-                    style="background: rgba(255,255,255,0.03); border-radius: 32px; padding: 40px 30px; position: relative; border: 1px solid var(--border); backdrop-filter: blur(20px); transition: all 0.3s ease; animation-delay: 0.2s;">
-                    <div
-                        style="position: absolute; top: 20px; right: 20px; background: rgba(255, 107, 53, 0.2); color: var(--primary); padding: 8px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                        Save 40%</div>
-                    <h3 style="font-size: 28px; margin-bottom: 10px; color: white;">Regular</h3>
-                    <div style="margin-bottom: 30px;">
-                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$479</span>
-                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> USD</span>
+                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$349</span>
+                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> per year</span>
                     </div>
 
                     <div style="margin-bottom: 30px;">
@@ -1383,40 +1337,32 @@
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Duration</div>
-                            <div style="color: white; font-weight: 600;">1 Year</div>
+                                Support</div>
+                            <div style="color: white; font-weight: 600;">Standard Support</div>
                         </div>
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Dish Updates</div>
-                            <div style="color: white; font-weight: 600;">Available</div>
+                                Updates</div>
+                            <div style="color: white; font-weight: 600;">Standard Updates</div>
                         </div>
                     </div>
 
-                    <div
-                        style="margin-bottom: 25px; padding: 15px; background: rgba(255,107,53,0.1); border-radius: 12px; text-align: center; border: 1px solid rgba(255,107,53,0.2);">
-                        <div style="color: var(--primary); font-weight: 700;">$150 USD Renewal</div>
-                    </div>
-
-                    <a href="menu/" class="btn-main"
+                    <a href="mailto:hello@menuxr.in?subject=Interested in Professional Plan" class="btn-main"
                         style="display: block; width: 100%; text-align: center; padding: 18px; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">
-                        Get Started</a>
+                        Reply Interested</a>
                 </div>
 
                 <!-- Elite Plan -->
                 <div class="pricing-card reveal"
-                    style="background: rgba(255,107,53,0.05); border-radius: 32px; padding: 40px 30px; position: relative; border: 2px solid var(--primary); backdrop-filter: blur(20px); transition: all 0.3s ease; transform: scale(1.05); box-shadow: 0 20px 60px rgba(255,107,53,0.3); animation-delay: 0.3s;">
+                    style="background: rgba(255,107,53,0.05); border-radius: 32px; padding: 40px 30px; position: relative; border: 2px solid var(--primary); backdrop-filter: blur(20px); transition: all 0.3s ease; transform: scale(1.05); box-shadow: 0 20px 60px rgba(255,107,53,0.3); z-index: 10; animation-delay: 0.2s;">
                     <div
                         style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 10px 30px; border-radius: 50px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 12px rgba(255,107,53,0.4);">
-                        MOST POPULAR</div>
-                    <div
-                        style="position: absolute; top: 20px; right: 20px; background: rgba(255, 107, 53, 0.2); color: var(--primary); padding: 8px 16px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                        Save 60%</div>
+                        🔥 Most Popular</div>
                     <h3 style="font-size: 28px; margin-bottom: 10px; color: white;">Elite</h3>
                     <div style="margin-bottom: 30px;">
-                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$719</span>
-                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> USD</span>
+                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$699</span>
+                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> per year</span>
                     </div>
 
                     <div style="margin-bottom: 30px;">
@@ -1429,41 +1375,29 @@
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Duration</div>
-                            <div style="color: white; font-weight: 600;">1 Year</div>
+                                Updates</div>
+                            <div style="color: white; font-weight: 600;">VIP Priority Updates</div>
                         </div>
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Dish Updates</div>
-                            <div style="color: white; font-weight: 600;">✓ VIP Included</div>
+                                Analytics</div>
+                            <div style="color: white; font-weight: 600;">Advanced Analytics</div>
                         </div>
                     </div>
 
-                    <div
-                        style="margin-bottom: 25px; padding: 15px; background: rgba(255,107,53,0.15); border-radius: 12px; text-align: center; border: 1px solid rgba(255,107,53,0.3);">
-                        <div style="color: var(--primary); font-weight: 700;">$100 USD Loyalty Renew</div>
-                    </div>
-
-                    <a href="menu/" class="btn-main"
+                    <a href="mailto:hello@menuxr.in?subject=Interested in Elite Plan" class="btn-main"
                         style="display: block; width: 100%; text-align: center; padding: 18px; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">
-                        Get Started</a>
+                        Reply Interested</a>
                 </div>
 
                 <!-- Enterprise Plan -->
                 <div class="pricing-card reveal"
-                    style="background: rgba(255,255,255,0.03); border-radius: 32px; padding: 40px 30px; position: relative; border: 1px solid var(--border); backdrop-filter: blur(20px); transition: all 0.3s ease; animation-delay: 0.4s;">
-                    <div style="display: flex; gap: 4px; margin-bottom: 15px; justify-content: center;">
-                        <span style="color: #FFD700; font-size: 20px;">★</span>
-                        <span style="color: #FFD700; font-size: 20px;">★</span>
-                        <span style="color: #FFD700; font-size: 20px;">★</span>
-                        <span style="color: #FFD700; font-size: 20px;">★</span>
-                        <span style="color: #FFD700; font-size: 20px;">★</span>
-                    </div>
+                    style="background: rgba(255,255,255,0.03); border-radius: 32px; padding: 40px 30px; position: relative; border: 1px solid var(--border); backdrop-filter: blur(20px); transition: all 0.3s ease; animation-delay: 0.3s;">
                     <h3 style="font-size: 28px; margin-bottom: 10px; color: white;">Enterprise</h3>
                     <div style="margin-bottom: 30px;">
-                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$1,199</span>
-                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> USD</span>
+                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$999</span>
+                        <span style="color: rgba(255,255,255,0.5); font-size: 16px;"> one-time</span>
                     </div>
 
                     <div style="margin-bottom: 30px;">
@@ -1476,29 +1410,22 @@
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Duration</div>
+                                Access</div>
                             <div
                                 style="color: white; font-weight: 800; background: linear-gradient(135deg, var(--primary), #FFD700); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;">
-                                LIFETIME</div>
+                                Lifetime Access</div>
                         </div>
                         <div style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <div
                                 style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
-                                Dish Updates</div>
-                            <div style="color: white; font-weight: 600;">✓ Priority VIP</div>
+                                Support</div>
+                            <div style="color: white; font-weight: 600;">Dedicated Support</div>
                         </div>
                     </div>
 
-                    <div
-                        style="margin-bottom: 25px; padding: 15px; background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(255,215,0,0.2)); border-radius: 12px; text-align: center; border: 1px solid rgba(255,215,0,0.3);">
-                        <div
-                            style="color: #FFD700; font-weight: 800; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
-                            One-Time Payment</div>
-                    </div>
-
-                    <a href="menu/" class="btn-main"
+                    <a href="mailto:hello@menuxr.in?subject=Interested in Enterprise Plan" class="btn-main"
                         style="display: block; width: 100%; text-align: center; padding: 18px; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(135deg, var(--primary) 0%, #FFD700 100%);">
-                        Get Started</a>
+                        Reply Interested</a>
                 </div>
 
             </div>
